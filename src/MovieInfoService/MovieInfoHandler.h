@@ -30,8 +30,12 @@ MovieInfoServiceHandler::MovieInfoServiceHandler() {
 // Remote Procedure "GetMoviesById"
 
 void MovieInfoServiceHandler::GetMoviesByIds(std::vector<std::string>& _return, const std::vector<std::string> & movie_ids) {
-   _return.push_back("Muppets Take Manhattan");
-   _return.push_back("The Lion King");
+    // This is a placeholder, used to confirm that RecommenderService can communicate properly with MovieInfoService
+    // Once the MongoDB is up and running, this should return movie titles that match the given ids.
+
+    for (auto &movie_id : movie_ids) {
+        _return.push_back("MovieInfoService will provide title for movie with id: " + movie_id);
+    }
 }
 
 } // namespace movies

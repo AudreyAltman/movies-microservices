@@ -10,5 +10,9 @@
   "user-likes-service": {
     "addr": "user-likes-service",
     "port": 9094
+  },
+  "recommender-mongodb": {
+    "addr": "recommender-mongodb",
+    "port": 27017
   }
 }

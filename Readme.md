@@ -12,7 +12,9 @@ Audrey Altman, Vishakha Kumar, and Nicole Stark
 - libssl-dev (apt-get install libssl-dev)
 - libz-dev (apt-get install libz-dev)
 - luarocks (apt-get install luarocks)
-- luasocket (luarocks install luasocket
+- luasocket (luarocks install luasocket)
+- mongoc
+-- (Installation instructions: http://mongoc.org/libmongoc/current/installing.html)
 - Thrift 0.14.0 (./configure --with-lua --with-cpp --with-py)
 -- (Thrift tutorial: https://www.youtube.com/watch?v=NK6hz2JM89w)
 
