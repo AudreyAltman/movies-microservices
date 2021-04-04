@@ -15,4 +15,8 @@
     "addr": "recommender-mongodb",
     "port": 27017
   }
+  "movie-info-mongodb": {
+    "addr": "movie-info-mongodb",
+    "port": 27017
+  }
 }
