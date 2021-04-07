@@ -5,6 +5,7 @@
 #include <signal.h>
 
 #include "../utils.h"
+#include "../utils_mongodb.h"
 #include "MovieInfoHandler.h"
 
 using json = nlohmann::json;
@@ -38,10 +39,33 @@ int main(int argc, char **argv) {
   // 3: get my port
   int my_port = config_json["movie-info-service"]["port"];
 
+// Get mongodb client pool
+   mongoc_client_pool_t* mongodb_client_pool =
+   init_mongodb_client_pool(config_json, "movies", 128);
+        	 
+ 	 	 std::cout << "Mongodb client pool done ..." << std::endl;
+   	 	   if (mongodb_client_pool == nullptr) {
+	 	        return EXIT_FAILURE;
+    	          }
+   	 	            
+ 
+	   std::cout << "Mongodb before client pop 11..." << std::endl;
+    
+   mongoc_client_t *mongodb_client = mongoc_client_pool_pop(mongodb_client_pool);
+      if (!mongodb_client) {
+          LOG(fatal) << "Failed to pop mongoc client";
+	        return EXIT_FAILURE;
+	    }
+      std::cout << "Mongodb before client pop 22..." << std::endl;
+
+       mongoc_client_pool_push(mongodb_client_pool, mongodb_client);
+	std::cout << "Mongodb client push done ..." << std::endl;
+
+			
   // 4: configure this server
   TThreadedServer server(
       std::make_shared<MovieInfoServiceProcessor>(
-          std::make_shared<MovieInfoServiceHandler>()),
+      std::make_shared<MovieInfoServiceHandler>(mongodb_client_pool)),
       std::make_shared<TServerSocket>("0.0.0.0", my_port),
       std::make_shared<TFramedTransportFactory>(),
       std::make_shared<TBinaryProtocolFactory>()
