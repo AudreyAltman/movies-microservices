@@ -256,11 +256,11 @@ uint32_t UserLikesService_GetMovieLikesByIds_presult::read(::apache::thrift::pro
 }
 
 
-UserLikesService_LikeDislikeMovie_args::~UserLikesService_LikeDislikeMovie_args() noexcept {
+UserLikesService_UserRateMovie_args::~UserLikesService_UserRateMovie_args() noexcept {
 }
 
 
-uint32_t UserLikesService_LikeDislikeMovie_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t UserLikesService_UserRateMovie_args::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -298,8 +298,8 @@ uint32_t UserLikesService_LikeDislikeMovie_args::read(::apache::thrift::protocol
         }
         break;
       case 3:
-        if (ftype == ::apache::thrift::protocol::T_BOOL) {
-          xfer += iprot->readBool(this->likeDislike);
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->likeDislike);
           this->__isset.likeDislike = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -317,10 +317,10 @@ uint32_t UserLikesService_LikeDislikeMovie_args::read(::apache::thrift::protocol
   return xfer;
 }
 
-uint32_t UserLikesService_LikeDislikeMovie_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t UserLikesService_UserRateMovie_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("UserLikesService_LikeDislikeMovie_args");
+  xfer += oprot->writeStructBegin("UserLikesService_UserRateMovie_args");
 
   xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString(this->user_id);
@@ -330,8 +330,8 @@ uint32_t UserLikesService_LikeDislikeMovie_args::write(::apache::thrift::protoco
   xfer += oprot->writeString(this->movie_id);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("likeDislike", ::apache::thrift::protocol::T_BOOL, 3);
-  xfer += oprot->writeBool(this->likeDislike);
+  xfer += oprot->writeFieldBegin("likeDislike", ::apache::thrift::protocol::T_I64, 3);
+  xfer += oprot->writeI64(this->likeDislike);
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -340,14 +340,14 @@ uint32_t UserLikesService_LikeDislikeMovie_args::write(::apache::thrift::protoco
 }
 
 
-UserLikesService_LikeDislikeMovie_pargs::~UserLikesService_LikeDislikeMovie_pargs() noexcept {
+UserLikesService_UserRateMovie_pargs::~UserLikesService_UserRateMovie_pargs() noexcept {
 }
 
 
-uint32_t UserLikesService_LikeDislikeMovie_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t UserLikesService_UserRateMovie_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("UserLikesService_LikeDislikeMovie_pargs");
+  xfer += oprot->writeStructBegin("UserLikesService_UserRateMovie_pargs");
 
   xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->user_id)));
@@ -357,8 +357,8 @@ uint32_t UserLikesService_LikeDislikeMovie_pargs::write(::apache::thrift::protoc
   xfer += oprot->writeString((*(this->movie_id)));
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("likeDislike", ::apache::thrift::protocol::T_BOOL, 3);
-  xfer += oprot->writeBool((*(this->likeDislike)));
+  xfer += oprot->writeFieldBegin("likeDislike", ::apache::thrift::protocol::T_I64, 3);
+  xfer += oprot->writeI64((*(this->likeDislike)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -367,11 +367,11 @@ uint32_t UserLikesService_LikeDislikeMovie_pargs::write(::apache::thrift::protoc
 }
 
 
-UserLikesService_LikeDislikeMovie_result::~UserLikesService_LikeDislikeMovie_result() noexcept {
+UserLikesService_UserRateMovie_result::~UserLikesService_UserRateMovie_result() noexcept {
 }
 
 
-uint32_t UserLikesService_LikeDislikeMovie_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t UserLikesService_UserRateMovie_result::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -399,11 +399,11 @@ uint32_t UserLikesService_LikeDislikeMovie_result::read(::apache::thrift::protoc
   return xfer;
 }
 
-uint32_t UserLikesService_LikeDislikeMovie_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t UserLikesService_UserRateMovie_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
 
   uint32_t xfer = 0;
 
-  xfer += oprot->writeStructBegin("UserLikesService_LikeDislikeMovie_result");
+  xfer += oprot->writeStructBegin("UserLikesService_UserRateMovie_result");
 
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
@@ -411,11 +411,11 @@ uint32_t UserLikesService_LikeDislikeMovie_result::write(::apache::thrift::proto
 }
 
 
-UserLikesService_LikeDislikeMovie_presult::~UserLikesService_LikeDislikeMovie_presult() noexcept {
+UserLikesService_UserRateMovie_presult::~UserLikesService_UserRateMovie_presult() noexcept {
 }
 
 
-uint32_t UserLikesService_LikeDislikeMovie_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t UserLikesService_UserRateMovie_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -435,6 +435,927 @@ uint32_t UserLikesService_LikeDislikeMovie_presult::read(::apache::thrift::proto
       break;
     }
     xfer += iprot->skip(ftype);
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+UserLikesService_GetUsersLikedMovies_args::~UserLikesService_GetUsersLikedMovies_args() noexcept {
+}
+
+
+uint32_t UserLikesService_GetUsersLikedMovies_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->user_id);
+          this->__isset.user_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t UserLikesService_GetUsersLikedMovies_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("UserLikesService_GetUsersLikedMovies_args");
+
+  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->user_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_GetUsersLikedMovies_pargs::~UserLikesService_GetUsersLikedMovies_pargs() noexcept {
+}
+
+
+uint32_t UserLikesService_GetUsersLikedMovies_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("UserLikesService_GetUsersLikedMovies_pargs");
+
+  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->user_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_GetUsersLikedMovies_result::~UserLikesService_GetUsersLikedMovies_result() noexcept {
+}
+
+
+uint32_t UserLikesService_GetUsersLikedMovies_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->success.clear();
+            uint32_t _size50;
+            ::apache::thrift::protocol::TType _etype53;
+            xfer += iprot->readListBegin(_etype53, _size50);
+            this->success.resize(_size50);
+            uint32_t _i54;
+            for (_i54 = 0; _i54 < _size50; ++_i54)
+            {
+              xfer += iprot->readString(this->success[_i54]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t UserLikesService_GetUsersLikedMovies_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("UserLikesService_GetUsersLikedMovies_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
+    {
+      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
+      std::vector<std::string> ::const_iterator _iter55;
+      for (_iter55 = this->success.begin(); _iter55 != this->success.end(); ++_iter55)
+      {
+        xfer += oprot->writeString((*_iter55));
+      }
+      xfer += oprot->writeListEnd();
+    }
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_GetUsersLikedMovies_presult::~UserLikesService_GetUsersLikedMovies_presult() noexcept {
+}
+
+
+uint32_t UserLikesService_GetUsersLikedMovies_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            (*(this->success)).clear();
+            uint32_t _size56;
+            ::apache::thrift::protocol::TType _etype59;
+            xfer += iprot->readListBegin(_etype59, _size56);
+            (*(this->success)).resize(_size56);
+            uint32_t _i60;
+            for (_i60 = 0; _i60 < _size56; ++_i60)
+            {
+              xfer += iprot->readString((*(this->success))[_i60]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+UserLikesService_GetMovieRating_args::~UserLikesService_GetMovieRating_args() noexcept {
+}
+
+
+uint32_t UserLikesService_GetMovieRating_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->movie_id);
+          this->__isset.movie_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t UserLikesService_GetMovieRating_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("UserLikesService_GetMovieRating_args");
+
+  xfer += oprot->writeFieldBegin("movie_id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->movie_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_GetMovieRating_pargs::~UserLikesService_GetMovieRating_pargs() noexcept {
+}
+
+
+uint32_t UserLikesService_GetMovieRating_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("UserLikesService_GetMovieRating_pargs");
+
+  xfer += oprot->writeFieldBegin("movie_id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->movie_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_GetMovieRating_result::~UserLikesService_GetMovieRating_result() noexcept {
+}
+
+
+uint32_t UserLikesService_GetMovieRating_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t UserLikesService_GetMovieRating_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("UserLikesService_GetMovieRating_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_I64, 0);
+    xfer += oprot->writeI64(this->success);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_GetMovieRating_presult::~UserLikesService_GetMovieRating_presult() noexcept {
+}
+
+
+uint32_t UserLikesService_GetMovieRating_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64((*(this->success)));
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+UserLikesService_UserWatchMovie_args::~UserLikesService_UserWatchMovie_args() noexcept {
+}
+
+
+uint32_t UserLikesService_UserWatchMovie_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->user_id);
+          this->__isset.user_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->movie_id);
+          this->__isset.movie_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t UserLikesService_UserWatchMovie_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("UserLikesService_UserWatchMovie_args");
+
+  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->user_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("movie_id", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->movie_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_UserWatchMovie_pargs::~UserLikesService_UserWatchMovie_pargs() noexcept {
+}
+
+
+uint32_t UserLikesService_UserWatchMovie_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("UserLikesService_UserWatchMovie_pargs");
+
+  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->user_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("movie_id", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString((*(this->movie_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_UserWatchMovie_result::~UserLikesService_UserWatchMovie_result() noexcept {
+}
+
+
+uint32_t UserLikesService_UserWatchMovie_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    xfer += iprot->skip(ftype);
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t UserLikesService_UserWatchMovie_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("UserLikesService_UserWatchMovie_result");
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_UserWatchMovie_presult::~UserLikesService_UserWatchMovie_presult() noexcept {
+}
+
+
+uint32_t UserLikesService_UserWatchMovie_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    xfer += iprot->skip(ftype);
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+UserLikesService_AddUser_args::~UserLikesService_AddUser_args() noexcept {
+}
+
+
+uint32_t UserLikesService_AddUser_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->user_name);
+          this->__isset.user_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t UserLikesService_AddUser_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("UserLikesService_AddUser_args");
+
+  xfer += oprot->writeFieldBegin("user_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->user_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_AddUser_pargs::~UserLikesService_AddUser_pargs() noexcept {
+}
+
+
+uint32_t UserLikesService_AddUser_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("UserLikesService_AddUser_pargs");
+
+  xfer += oprot->writeFieldBegin("user_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->user_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_AddUser_result::~UserLikesService_AddUser_result() noexcept {
+}
+
+
+uint32_t UserLikesService_AddUser_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    xfer += iprot->skip(ftype);
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t UserLikesService_AddUser_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("UserLikesService_AddUser_result");
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_AddUser_presult::~UserLikesService_AddUser_presult() noexcept {
+}
+
+
+uint32_t UserLikesService_AddUser_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    xfer += iprot->skip(ftype);
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+UserLikesService_GetUserID_args::~UserLikesService_GetUserID_args() noexcept {
+}
+
+
+uint32_t UserLikesService_GetUserID_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->user_name);
+          this->__isset.user_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t UserLikesService_GetUserID_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("UserLikesService_GetUserID_args");
+
+  xfer += oprot->writeFieldBegin("user_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->user_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_GetUserID_pargs::~UserLikesService_GetUserID_pargs() noexcept {
+}
+
+
+uint32_t UserLikesService_GetUserID_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("UserLikesService_GetUserID_pargs");
+
+  xfer += oprot->writeFieldBegin("user_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->user_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_GetUserID_result::~UserLikesService_GetUserID_result() noexcept {
+}
+
+
+uint32_t UserLikesService_GetUserID_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t UserLikesService_GetUserID_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("UserLikesService_GetUserID_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRING, 0);
+    xfer += oprot->writeString(this->success);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+UserLikesService_GetUserID_presult::~UserLikesService_GetUserID_presult() noexcept {
+}
+
+
+uint32_t UserLikesService_GetUserID_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString((*(this->success)));
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
     xfer += iprot->readFieldEnd();
   }
 
@@ -501,18 +1422,18 @@ void UserLikesServiceClient::recv_GetMovieLikesByIds(std::vector<int64_t> & _ret
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "GetMovieLikesByIds failed: unknown result");
 }
 
-void UserLikesServiceClient::LikeDislikeMovie(const std::string& user_id, const std::string& movie_id, const bool likeDislike)
+void UserLikesServiceClient::UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike)
 {
-  send_LikeDislikeMovie(user_id, movie_id, likeDislike);
-  recv_LikeDislikeMovie();
+  send_UserRateMovie(user_id, movie_id, likeDislike);
+  recv_UserRateMovie();
 }
 
-void UserLikesServiceClient::send_LikeDislikeMovie(const std::string& user_id, const std::string& movie_id, const bool likeDislike)
+void UserLikesServiceClient::send_UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike)
 {
   int32_t cseqid = 0;
-  oprot_->writeMessageBegin("LikeDislikeMovie", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("UserRateMovie", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  UserLikesService_LikeDislikeMovie_pargs args;
+  UserLikesService_UserRateMovie_pargs args;
   args.user_id = &user_id;
   args.movie_id = &movie_id;
   args.likeDislike = &likeDislike;
@@ -523,7 +1444,7 @@ void UserLikesServiceClient::send_LikeDislikeMovie(const std::string& user_id, c
   oprot_->getTransport()->flush();
 }
 
-void UserLikesServiceClient::recv_LikeDislikeMovie()
+void UserLikesServiceClient::recv_UserRateMovie()
 {
 
   int32_t rseqid = 0;
@@ -543,17 +1464,298 @@ void UserLikesServiceClient::recv_LikeDislikeMovie()
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  if (fname.compare("LikeDislikeMovie") != 0) {
+  if (fname.compare("UserRateMovie") != 0) {
     iprot_->skip(::apache::thrift::protocol::T_STRUCT);
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  UserLikesService_LikeDislikeMovie_presult result;
+  UserLikesService_UserRateMovie_presult result;
   result.read(iprot_);
   iprot_->readMessageEnd();
   iprot_->getTransport()->readEnd();
 
   return;
+}
+
+void UserLikesServiceClient::GetUsersLikedMovies(std::vector<std::string> & _return, const std::string& user_id)
+{
+  send_GetUsersLikedMovies(user_id);
+  recv_GetUsersLikedMovies(_return);
+}
+
+void UserLikesServiceClient::send_GetUsersLikedMovies(const std::string& user_id)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("GetUsersLikedMovies", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  UserLikesService_GetUsersLikedMovies_pargs args;
+  args.user_id = &user_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void UserLikesServiceClient::recv_GetUsersLikedMovies(std::vector<std::string> & _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("GetUsersLikedMovies") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  UserLikesService_GetUsersLikedMovies_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "GetUsersLikedMovies failed: unknown result");
+}
+
+int64_t UserLikesServiceClient::GetMovieRating(const std::string& movie_id)
+{
+  send_GetMovieRating(movie_id);
+  return recv_GetMovieRating();
+}
+
+void UserLikesServiceClient::send_GetMovieRating(const std::string& movie_id)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("GetMovieRating", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  UserLikesService_GetMovieRating_pargs args;
+  args.movie_id = &movie_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+int64_t UserLikesServiceClient::recv_GetMovieRating()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("GetMovieRating") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  int64_t _return;
+  UserLikesService_GetMovieRating_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    return _return;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "GetMovieRating failed: unknown result");
+}
+
+void UserLikesServiceClient::UserWatchMovie(const std::string& user_id, const std::string& movie_id)
+{
+  send_UserWatchMovie(user_id, movie_id);
+  recv_UserWatchMovie();
+}
+
+void UserLikesServiceClient::send_UserWatchMovie(const std::string& user_id, const std::string& movie_id)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("UserWatchMovie", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  UserLikesService_UserWatchMovie_pargs args;
+  args.user_id = &user_id;
+  args.movie_id = &movie_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void UserLikesServiceClient::recv_UserWatchMovie()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("UserWatchMovie") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  UserLikesService_UserWatchMovie_presult result;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  return;
+}
+
+void UserLikesServiceClient::AddUser(const std::string& user_name)
+{
+  send_AddUser(user_name);
+  recv_AddUser();
+}
+
+void UserLikesServiceClient::send_AddUser(const std::string& user_name)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("AddUser", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  UserLikesService_AddUser_pargs args;
+  args.user_name = &user_name;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void UserLikesServiceClient::recv_AddUser()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("AddUser") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  UserLikesService_AddUser_presult result;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  return;
+}
+
+void UserLikesServiceClient::GetUserID(std::string& _return, const std::string& user_name)
+{
+  send_GetUserID(user_name);
+  recv_GetUserID(_return);
+}
+
+void UserLikesServiceClient::send_GetUserID(const std::string& user_name)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("GetUserID", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  UserLikesService_GetUserID_pargs args;
+  args.user_name = &user_name;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void UserLikesServiceClient::recv_GetUserID(std::string& _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("GetUserID") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  UserLikesService_GetUserID_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "GetUserID failed: unknown result");
 }
 
 bool UserLikesServiceProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
@@ -629,37 +1831,37 @@ void UserLikesServiceProcessor::process_GetMovieLikesByIds(int32_t seqid, ::apac
   }
 }
 
-void UserLikesServiceProcessor::process_LikeDislikeMovie(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+void UserLikesServiceProcessor::process_UserRateMovie(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = NULL;
   if (this->eventHandler_.get() != NULL) {
-    ctx = this->eventHandler_->getContext("UserLikesService.LikeDislikeMovie", callContext);
+    ctx = this->eventHandler_->getContext("UserLikesService.UserRateMovie", callContext);
   }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "UserLikesService.LikeDislikeMovie");
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "UserLikesService.UserRateMovie");
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preRead(ctx, "UserLikesService.LikeDislikeMovie");
+    this->eventHandler_->preRead(ctx, "UserLikesService.UserRateMovie");
   }
 
-  UserLikesService_LikeDislikeMovie_args args;
+  UserLikesService_UserRateMovie_args args;
   args.read(iprot);
   iprot->readMessageEnd();
   uint32_t bytes = iprot->getTransport()->readEnd();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postRead(ctx, "UserLikesService.LikeDislikeMovie", bytes);
+    this->eventHandler_->postRead(ctx, "UserLikesService.UserRateMovie", bytes);
   }
 
-  UserLikesService_LikeDislikeMovie_result result;
+  UserLikesService_UserRateMovie_result result;
   try {
-    iface_->LikeDislikeMovie(args.user_id, args.movie_id, args.likeDislike);
+    iface_->UserRateMovie(args.user_id, args.movie_id, args.likeDislike);
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
-      this->eventHandler_->handlerError(ctx, "UserLikesService.LikeDislikeMovie");
+      this->eventHandler_->handlerError(ctx, "UserLikesService.UserRateMovie");
     }
 
     ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("LikeDislikeMovie", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    oprot->writeMessageBegin("UserRateMovie", ::apache::thrift::protocol::T_EXCEPTION, seqid);
     x.write(oprot);
     oprot->writeMessageEnd();
     oprot->getTransport()->writeEnd();
@@ -668,17 +1870,285 @@ void UserLikesServiceProcessor::process_LikeDislikeMovie(int32_t seqid, ::apache
   }
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preWrite(ctx, "UserLikesService.LikeDislikeMovie");
+    this->eventHandler_->preWrite(ctx, "UserLikesService.UserRateMovie");
   }
 
-  oprot->writeMessageBegin("LikeDislikeMovie", ::apache::thrift::protocol::T_REPLY, seqid);
+  oprot->writeMessageBegin("UserRateMovie", ::apache::thrift::protocol::T_REPLY, seqid);
   result.write(oprot);
   oprot->writeMessageEnd();
   bytes = oprot->getTransport()->writeEnd();
   oprot->getTransport()->flush();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postWrite(ctx, "UserLikesService.LikeDislikeMovie", bytes);
+    this->eventHandler_->postWrite(ctx, "UserLikesService.UserRateMovie", bytes);
+  }
+}
+
+void UserLikesServiceProcessor::process_GetUsersLikedMovies(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = NULL;
+  if (this->eventHandler_.get() != NULL) {
+    ctx = this->eventHandler_->getContext("UserLikesService.GetUsersLikedMovies", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "UserLikesService.GetUsersLikedMovies");
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preRead(ctx, "UserLikesService.GetUsersLikedMovies");
+  }
+
+  UserLikesService_GetUsersLikedMovies_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postRead(ctx, "UserLikesService.GetUsersLikedMovies", bytes);
+  }
+
+  UserLikesService_GetUsersLikedMovies_result result;
+  try {
+    iface_->GetUsersLikedMovies(result.success, args.user_id);
+    result.__isset.success = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != NULL) {
+      this->eventHandler_->handlerError(ctx, "UserLikesService.GetUsersLikedMovies");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("GetUsersLikedMovies", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preWrite(ctx, "UserLikesService.GetUsersLikedMovies");
+  }
+
+  oprot->writeMessageBegin("GetUsersLikedMovies", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postWrite(ctx, "UserLikesService.GetUsersLikedMovies", bytes);
+  }
+}
+
+void UserLikesServiceProcessor::process_GetMovieRating(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = NULL;
+  if (this->eventHandler_.get() != NULL) {
+    ctx = this->eventHandler_->getContext("UserLikesService.GetMovieRating", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "UserLikesService.GetMovieRating");
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preRead(ctx, "UserLikesService.GetMovieRating");
+  }
+
+  UserLikesService_GetMovieRating_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postRead(ctx, "UserLikesService.GetMovieRating", bytes);
+  }
+
+  UserLikesService_GetMovieRating_result result;
+  try {
+    result.success = iface_->GetMovieRating(args.movie_id);
+    result.__isset.success = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != NULL) {
+      this->eventHandler_->handlerError(ctx, "UserLikesService.GetMovieRating");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("GetMovieRating", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preWrite(ctx, "UserLikesService.GetMovieRating");
+  }
+
+  oprot->writeMessageBegin("GetMovieRating", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postWrite(ctx, "UserLikesService.GetMovieRating", bytes);
+  }
+}
+
+void UserLikesServiceProcessor::process_UserWatchMovie(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = NULL;
+  if (this->eventHandler_.get() != NULL) {
+    ctx = this->eventHandler_->getContext("UserLikesService.UserWatchMovie", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "UserLikesService.UserWatchMovie");
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preRead(ctx, "UserLikesService.UserWatchMovie");
+  }
+
+  UserLikesService_UserWatchMovie_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postRead(ctx, "UserLikesService.UserWatchMovie", bytes);
+  }
+
+  UserLikesService_UserWatchMovie_result result;
+  try {
+    iface_->UserWatchMovie(args.user_id, args.movie_id);
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != NULL) {
+      this->eventHandler_->handlerError(ctx, "UserLikesService.UserWatchMovie");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("UserWatchMovie", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preWrite(ctx, "UserLikesService.UserWatchMovie");
+  }
+
+  oprot->writeMessageBegin("UserWatchMovie", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postWrite(ctx, "UserLikesService.UserWatchMovie", bytes);
+  }
+}
+
+void UserLikesServiceProcessor::process_AddUser(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = NULL;
+  if (this->eventHandler_.get() != NULL) {
+    ctx = this->eventHandler_->getContext("UserLikesService.AddUser", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "UserLikesService.AddUser");
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preRead(ctx, "UserLikesService.AddUser");
+  }
+
+  UserLikesService_AddUser_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postRead(ctx, "UserLikesService.AddUser", bytes);
+  }
+
+  UserLikesService_AddUser_result result;
+  try {
+    iface_->AddUser(args.user_name);
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != NULL) {
+      this->eventHandler_->handlerError(ctx, "UserLikesService.AddUser");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("AddUser", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preWrite(ctx, "UserLikesService.AddUser");
+  }
+
+  oprot->writeMessageBegin("AddUser", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postWrite(ctx, "UserLikesService.AddUser", bytes);
+  }
+}
+
+void UserLikesServiceProcessor::process_GetUserID(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = NULL;
+  if (this->eventHandler_.get() != NULL) {
+    ctx = this->eventHandler_->getContext("UserLikesService.GetUserID", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "UserLikesService.GetUserID");
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preRead(ctx, "UserLikesService.GetUserID");
+  }
+
+  UserLikesService_GetUserID_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postRead(ctx, "UserLikesService.GetUserID", bytes);
+  }
+
+  UserLikesService_GetUserID_result result;
+  try {
+    iface_->GetUserID(result.success, args.user_name);
+    result.__isset.success = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != NULL) {
+      this->eventHandler_->handlerError(ctx, "UserLikesService.GetUserID");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("GetUserID", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preWrite(ctx, "UserLikesService.GetUserID");
+  }
+
+  oprot->writeMessageBegin("GetUserID", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postWrite(ctx, "UserLikesService.GetUserID", bytes);
   }
 }
 
@@ -773,19 +2243,19 @@ void UserLikesServiceConcurrentClient::recv_GetMovieLikesByIds(std::vector<int64
   } // end while(true)
 }
 
-void UserLikesServiceConcurrentClient::LikeDislikeMovie(const std::string& user_id, const std::string& movie_id, const bool likeDislike)
+void UserLikesServiceConcurrentClient::UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike)
 {
-  int32_t seqid = send_LikeDislikeMovie(user_id, movie_id, likeDislike);
-  recv_LikeDislikeMovie(seqid);
+  int32_t seqid = send_UserRateMovie(user_id, movie_id, likeDislike);
+  recv_UserRateMovie(seqid);
 }
 
-int32_t UserLikesServiceConcurrentClient::send_LikeDislikeMovie(const std::string& user_id, const std::string& movie_id, const bool likeDislike)
+int32_t UserLikesServiceConcurrentClient::send_UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
-  oprot_->writeMessageBegin("LikeDislikeMovie", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("UserRateMovie", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  UserLikesService_LikeDislikeMovie_pargs args;
+  UserLikesService_UserRateMovie_pargs args;
   args.user_id = &user_id;
   args.movie_id = &movie_id;
   args.likeDislike = &likeDislike;
@@ -799,7 +2269,7 @@ int32_t UserLikesServiceConcurrentClient::send_LikeDislikeMovie(const std::strin
   return cseqid;
 }
 
-void UserLikesServiceConcurrentClient::recv_LikeDislikeMovie(const int32_t seqid)
+void UserLikesServiceConcurrentClient::recv_UserRateMovie(const int32_t seqid)
 {
 
   int32_t rseqid = 0;
@@ -828,7 +2298,7 @@ void UserLikesServiceConcurrentClient::recv_LikeDislikeMovie(const int32_t seqid
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
       }
-      if (fname.compare("LikeDislikeMovie") != 0) {
+      if (fname.compare("UserRateMovie") != 0) {
         iprot_->skip(::apache::thrift::protocol::T_STRUCT);
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
@@ -837,13 +2307,422 @@ void UserLikesServiceConcurrentClient::recv_LikeDislikeMovie(const int32_t seqid
         using ::apache::thrift::protocol::TProtocolException;
         throw TProtocolException(TProtocolException::INVALID_DATA);
       }
-      UserLikesService_LikeDislikeMovie_presult result;
+      UserLikesService_UserRateMovie_presult result;
       result.read(iprot_);
       iprot_->readMessageEnd();
       iprot_->getTransport()->readEnd();
 
       sentry.commit();
       return;
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void UserLikesServiceConcurrentClient::GetUsersLikedMovies(std::vector<std::string> & _return, const std::string& user_id)
+{
+  int32_t seqid = send_GetUsersLikedMovies(user_id);
+  recv_GetUsersLikedMovies(_return, seqid);
+}
+
+int32_t UserLikesServiceConcurrentClient::send_GetUsersLikedMovies(const std::string& user_id)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("GetUsersLikedMovies", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  UserLikesService_GetUsersLikedMovies_pargs args;
+  args.user_id = &user_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void UserLikesServiceConcurrentClient::recv_GetUsersLikedMovies(std::vector<std::string> & _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("GetUsersLikedMovies") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      UserLikesService_GetUsersLikedMovies_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "GetUsersLikedMovies failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+int64_t UserLikesServiceConcurrentClient::GetMovieRating(const std::string& movie_id)
+{
+  int32_t seqid = send_GetMovieRating(movie_id);
+  return recv_GetMovieRating(seqid);
+}
+
+int32_t UserLikesServiceConcurrentClient::send_GetMovieRating(const std::string& movie_id)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("GetMovieRating", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  UserLikesService_GetMovieRating_pargs args;
+  args.movie_id = &movie_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+int64_t UserLikesServiceConcurrentClient::recv_GetMovieRating(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("GetMovieRating") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      int64_t _return;
+      UserLikesService_GetMovieRating_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        sentry.commit();
+        return _return;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "GetMovieRating failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void UserLikesServiceConcurrentClient::UserWatchMovie(const std::string& user_id, const std::string& movie_id)
+{
+  int32_t seqid = send_UserWatchMovie(user_id, movie_id);
+  recv_UserWatchMovie(seqid);
+}
+
+int32_t UserLikesServiceConcurrentClient::send_UserWatchMovie(const std::string& user_id, const std::string& movie_id)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("UserWatchMovie", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  UserLikesService_UserWatchMovie_pargs args;
+  args.user_id = &user_id;
+  args.movie_id = &movie_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void UserLikesServiceConcurrentClient::recv_UserWatchMovie(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("UserWatchMovie") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      UserLikesService_UserWatchMovie_presult result;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      sentry.commit();
+      return;
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void UserLikesServiceConcurrentClient::AddUser(const std::string& user_name)
+{
+  int32_t seqid = send_AddUser(user_name);
+  recv_AddUser(seqid);
+}
+
+int32_t UserLikesServiceConcurrentClient::send_AddUser(const std::string& user_name)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("AddUser", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  UserLikesService_AddUser_pargs args;
+  args.user_name = &user_name;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void UserLikesServiceConcurrentClient::recv_AddUser(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("AddUser") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      UserLikesService_AddUser_presult result;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      sentry.commit();
+      return;
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void UserLikesServiceConcurrentClient::GetUserID(std::string& _return, const std::string& user_name)
+{
+  int32_t seqid = send_GetUserID(user_name);
+  recv_GetUserID(_return, seqid);
+}
+
+int32_t UserLikesServiceConcurrentClient::send_GetUserID(const std::string& user_name)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("GetUserID", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  UserLikesService_GetUserID_pargs args;
+  args.user_name = &user_name;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void UserLikesServiceConcurrentClient::recv_GetUserID(std::string& _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("GetUserID") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      UserLikesService_GetUserID_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "GetUserID failed: unknown result");
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);

@@ -40,9 +40,25 @@ service UserLikesService{
 	list<i64> GetMovieLikesByIds(
      1: list<string> movie_ids
    )
-   void LikeDislikeMovie(
+   void UserRateMovie(
      1: string user_id
      2: string movie_id
-     3: bool likeDislike
+     3: i64 likeDislike
+   )
+   list<string> GetUsersLikedMovies(
+     1: string user_id
+   )
+   i64 GetMovieRating(
+     1: string movie_id
+   )
+   void UserWatchMovie(
+     1: string user_id
+	 2: string movie_id
+   )
+   void AddUser(
+     1: string user_name
+   )
+   string GetUserID(
+     1: string user_name
    )
 }

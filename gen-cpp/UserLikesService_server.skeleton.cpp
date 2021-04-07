@@ -25,9 +25,34 @@ class UserLikesServiceHandler : virtual public UserLikesServiceIf {
     printf("GetMovieLikesByIds\n");
   }
 
-  void LikeDislikeMovie(const std::string& user_id, const std::string& movie_id, const bool likeDislike) {
+  void UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike) {
     // Your implementation goes here
-    printf("LikeDislikeMovie\n");
+    printf("UserRateMovie\n");
+  }
+
+  void GetUsersLikedMovies(std::vector<std::string> & _return, const std::string& user_id) {
+    // Your implementation goes here
+    printf("GetUsersLikedMovies\n");
+  }
+
+  int64_t GetMovieRating(const std::string& movie_id) {
+    // Your implementation goes here
+    printf("GetMovieRating\n");
+  }
+
+  void UserWatchMovie(const std::string& user_id, const std::string& movie_id) {
+    // Your implementation goes here
+    printf("UserWatchMovie\n");
+  }
+
+  void AddUser(const std::string& user_name) {
+    // Your implementation goes here
+    printf("AddUser\n");
+  }
+
+  void GetUserID(std::string& _return, const std::string& user_name) {
+    // Your implementation goes here
+    printf("GetUserID\n");
   }
 
 };
