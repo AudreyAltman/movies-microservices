@@ -20,6 +20,11 @@ class RecommenderServiceHandler : virtual public RecommenderServiceIf {
     // Your initialization goes here
   }
 
+  void UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id) {
+    // Your implementation goes here
+    printf("UploadRecommendations\n");
+  }
+
   void GetRecommendations(std::vector<std::string> & _return, const int64_t user) {
     // Your implementation goes here
     printf("GetRecommendations\n");

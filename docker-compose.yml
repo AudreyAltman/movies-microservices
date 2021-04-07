@@ -17,6 +17,11 @@ services:
     hostname: user-likes-service
     restart: always
     entrypoint: UserLikesService
+
+  recommender-mongodb:
+    image: mongo
+    hostname: recommender-mongodb
+    restart: always
     
   nginx-thrift:
     image: yg397/openresty-thrift:xenial

@@ -1,1 +1,1 @@
-curl -d "user_id=1" localhost:8080/recommendations
+curl -d "user_id=1" localhost:8080/recommendations/get
