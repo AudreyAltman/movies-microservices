@@ -22,6 +22,11 @@ services:
     image: mongo
     hostname: recommender-mongodb
     restart: always
+
+  likes-mongodb:
+    image: mongo
+    hostname: likes-mongodb
+    restart: always
     
   nginx-thrift:
     image: yg397/openresty-thrift:xenial

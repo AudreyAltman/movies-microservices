@@ -5,6 +5,8 @@
 #include <string>
 #include <regex>
 #include <future>
+#include <mongoc.h>
+#include <bson/bson.h>
 
 #include "../../gen-cpp/UserLikesService.h"
 
@@ -16,32 +18,29 @@ namespace movies{
 
 class UserLikesServiceHandler : public UserLikesServiceIf {
  public:
-  UserLikesServiceHandler();
+  UserLikesServiceHandler(mongoc_client_pool_t *);
   ~UserLikesServiceHandler() override=default;
 
-  void GetMovieLikesByIds(std::vector<int64_t>& _return, const std::vector<std::string> & movie_ids) override;
-  void UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike) override;
-  void GetUsersLikedMovies(std::vector<std::string>& _return, const std::string& user_id) override;
+  void UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike) override;
+  void GetUsersLikedMovies(std::vector<std::string>& _return, const int64_t user_id) override;
   int64_t GetMovieRating(const std::string& movie_id) override;
-  void UserWatchMovie(const std::string& user_id, const std::string& movie_id) override;
+  void UserWatchMovie(const int64_t user_id, const std::string& movie_id) override;
   void AddUser(const std::string& user_name) override;
-  void GetUserID(std::string& _return, const std::string& user_name) override;
+  int64_t GetUserID(const std::string& user_name) override;
+ private:
+  mongoc_client_pool_t *_mongodb_client_pool;
 };
 
 // Constructor
-UserLikesServiceHandler::UserLikesServiceHandler() {
-
+UserLikesServiceHandler::UserLikesServiceHandler(mongoc_client_pool_t *mongodb_client_pool) {
+  // Storing the clientpool
+       _mongodb_client_pool = mongodb_client_pool;
 }
 
-// Remote Procedure "GetMoviesLikesByIds"
-void UserLikesServiceHandler::GetMovieLikesByIds(std::vector<int64_t>& _return, const std::vector<std::string> & movie_ids) {
-	_return.push_back(-5);
-	_return.push_back(8);
-}
 // Remote Procedure "UserRateMovie"
-void UserLikesServiceHandler::UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike) {
+void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike) {
 	// TO DO: update database with user like or dislike (false == dislike, true == like)
-	if (user_id != "") {
+	if (user_id != 0) {
 		// adjust like or dislike
 	}
 	else {
@@ -49,20 +48,65 @@ void UserLikesServiceHandler::UserRateMovie(const std::string& user_id, const st
 	}
 }
 
-void UserLikesServiceHandler::GetUsersLikedMovies(std::vector<std::string>& _return, const std::string& user_id) {
+void UserLikesServiceHandler::GetUsersLikedMovies(std::vector<std::string>& _return, const int64_t user_id) {
 	// TO DO: look up movies with value 1 in like position
 	_return.push_back("123");
 	_return.push_back("abc");
 }
 
 int64_t UserLikesServiceHandler::GetMovieRating(const std::string& movie_id) {
-	// TO DO: look up movie's overall rating (likes - dislikes)
-	return 5;
+	int64_t rating_return = 0;
+
+	// Get mongo client
+	mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
+
+	if (!mongodb_client) {
+	  ServiceException se;
+	  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+	  se.message = "Failed to pop a client from MongoDB pool";
+	  throw se;
+	}
+
+	// Get mongo collection
+	auto collection = mongoc_client_get_collection(mongodb_client, "likes", "movie-likes");
+
+	if (!collection) {
+	  ServiceException se;
+	  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+	  se.message = "Failed to create collection user from DB recommender";
+	  mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+	  throw se;
+	}
+
+	// Check if movie provided exists in database
+	bson_t *query = bson_new();
+	BSON_APPEND_UTF8(query, "movie_id", movie_id.c_str());
+
+	mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
+	const bson_t *doc;
+	bool found = mongoc_cursor_next(cursor, &doc);
+
+	if (found) {
+	  // Calculate rating by subtracting dislikes from likes
+	  auto likes_json_char = bson_as_json(doc, nullptr);
+	  json likes_json = json::parse(likes_json_char);
+	  
+	  rating_return = likes_json["user_likes"].json::get<int>() - likes_json["user_dislikes"].json::get<int>();
+	}
+
+	// Cleanup mongo
+	bson_destroy(query);
+	mongoc_cursor_destroy(cursor);
+	mongoc_collection_destroy(collection);
+	mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+	mongoc_cleanup();
+
+	return rating_return;
 }
 
-void UserLikesServiceHandler::UserWatchMovie(const std::string& user_id, const std::string& movie_id) {
+void UserLikesServiceHandler::UserWatchMovie(const int64_t user_id, const std::string& movie_id) {
 	// TO DO: put 0 in rating position for user and movie
-	if (user_id != "" && movie_id != "") {
+	if (user_id != 0 && movie_id != "") {
 		// put 0 in rating for movie
 	}
 	else {
@@ -81,9 +125,9 @@ void UserLikesServiceHandler::AddUser(const std::string& user_name) {
 	}
 }
 
-void UserLikesServiceHandler::GetUserID(std::string& _return, const std::string& user_name) {
+int64_t UserLikesServiceHandler::GetUserID(const std::string& user_name) {
 	// TO DO: get user ID based on username
-	_return = "8473";
+	return 8473;
 }
 
 } // namespace movies

@@ -20,17 +20,12 @@ class UserLikesServiceHandler : virtual public UserLikesServiceIf {
     // Your initialization goes here
   }
 
-  void GetMovieLikesByIds(std::vector<int64_t> & _return, const std::vector<std::string> & movie_ids) {
-    // Your implementation goes here
-    printf("GetMovieLikesByIds\n");
-  }
-
-  void UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike) {
+  void UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike) {
     // Your implementation goes here
     printf("UserRateMovie\n");
   }
 
-  void GetUsersLikedMovies(std::vector<std::string> & _return, const std::string& user_id) {
+  void GetUsersLikedMovies(std::vector<std::string> & _return, const int64_t user_id) {
     // Your implementation goes here
     printf("GetUsersLikedMovies\n");
   }
@@ -40,7 +35,7 @@ class UserLikesServiceHandler : virtual public UserLikesServiceIf {
     printf("GetMovieRating\n");
   }
 
-  void UserWatchMovie(const std::string& user_id, const std::string& movie_id) {
+  void UserWatchMovie(const int64_t user_id, const std::string& movie_id) {
     // Your implementation goes here
     printf("UserWatchMovie\n");
   }
@@ -50,7 +45,7 @@ class UserLikesServiceHandler : virtual public UserLikesServiceIf {
     printf("AddUser\n");
   }
 
-  void GetUserID(std::string& _return, const std::string& user_name) {
+  int64_t GetUserID(const std::string& user_name) {
     // Your implementation goes here
     printf("GetUserID\n");
   }

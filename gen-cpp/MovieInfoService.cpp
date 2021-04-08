@@ -38,14 +38,14 @@ uint32_t MovieInfoService_GetMoviesByIds_args::read(::apache::thrift::protocol::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->movie_ids.clear();
-            uint32_t _size14;
-            ::apache::thrift::protocol::TType _etype17;
-            xfer += iprot->readListBegin(_etype17, _size14);
-            this->movie_ids.resize(_size14);
-            uint32_t _i18;
-            for (_i18 = 0; _i18 < _size14; ++_i18)
+            uint32_t _size21;
+            ::apache::thrift::protocol::TType _etype24;
+            xfer += iprot->readListBegin(_etype24, _size21);
+            this->movie_ids.resize(_size21);
+            uint32_t _i25;
+            for (_i25 = 0; _i25 < _size21; ++_i25)
             {
-              xfer += iprot->readString(this->movie_ids[_i18]);
+              xfer += iprot->readString(this->movie_ids[_i25]);
             }
             xfer += iprot->readListEnd();
           }
@@ -74,10 +74,10 @@ uint32_t MovieInfoService_GetMoviesByIds_args::write(::apache::thrift::protocol:
   xfer += oprot->writeFieldBegin("movie_ids", ::apache::thrift::protocol::T_LIST, 1);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->movie_ids.size()));
-    std::vector<std::string> ::const_iterator _iter19;
-    for (_iter19 = this->movie_ids.begin(); _iter19 != this->movie_ids.end(); ++_iter19)
+    std::vector<std::string> ::const_iterator _iter26;
+    for (_iter26 = this->movie_ids.begin(); _iter26 != this->movie_ids.end(); ++_iter26)
     {
-      xfer += oprot->writeString((*_iter19));
+      xfer += oprot->writeString((*_iter26));
     }
     xfer += oprot->writeListEnd();
   }
@@ -101,10 +101,10 @@ uint32_t MovieInfoService_GetMoviesByIds_pargs::write(::apache::thrift::protocol
   xfer += oprot->writeFieldBegin("movie_ids", ::apache::thrift::protocol::T_LIST, 1);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*(this->movie_ids)).size()));
-    std::vector<std::string> ::const_iterator _iter20;
-    for (_iter20 = (*(this->movie_ids)).begin(); _iter20 != (*(this->movie_ids)).end(); ++_iter20)
+    std::vector<std::string> ::const_iterator _iter27;
+    for (_iter27 = (*(this->movie_ids)).begin(); _iter27 != (*(this->movie_ids)).end(); ++_iter27)
     {
-      xfer += oprot->writeString((*_iter20));
+      xfer += oprot->writeString((*_iter27));
     }
     xfer += oprot->writeListEnd();
   }
@@ -145,14 +145,14 @@ uint32_t MovieInfoService_GetMoviesByIds_result::read(::apache::thrift::protocol
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size21;
-            ::apache::thrift::protocol::TType _etype24;
-            xfer += iprot->readListBegin(_etype24, _size21);
-            this->success.resize(_size21);
-            uint32_t _i25;
-            for (_i25 = 0; _i25 < _size21; ++_i25)
+            uint32_t _size28;
+            ::apache::thrift::protocol::TType _etype31;
+            xfer += iprot->readListBegin(_etype31, _size28);
+            this->success.resize(_size28);
+            uint32_t _i32;
+            for (_i32 = 0; _i32 < _size28; ++_i32)
             {
-              xfer += iprot->readString(this->success[_i25]);
+              xfer += iprot->readString(this->success[_i32]);
             }
             xfer += iprot->readListEnd();
           }
@@ -183,10 +183,10 @@ uint32_t MovieInfoService_GetMoviesByIds_result::write(::apache::thrift::protoco
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter26;
-      for (_iter26 = this->success.begin(); _iter26 != this->success.end(); ++_iter26)
+      std::vector<std::string> ::const_iterator _iter33;
+      for (_iter33 = this->success.begin(); _iter33 != this->success.end(); ++_iter33)
       {
-        xfer += oprot->writeString((*_iter26));
+        xfer += oprot->writeString((*_iter33));
       }
       xfer += oprot->writeListEnd();
     }
@@ -227,14 +227,14 @@ uint32_t MovieInfoService_GetMoviesByIds_presult::read(::apache::thrift::protoco
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size27;
-            ::apache::thrift::protocol::TType _etype30;
-            xfer += iprot->readListBegin(_etype30, _size27);
-            (*(this->success)).resize(_size27);
-            uint32_t _i31;
-            for (_i31 = 0; _i31 < _size27; ++_i31)
+            uint32_t _size34;
+            ::apache::thrift::protocol::TType _etype37;
+            xfer += iprot->readListBegin(_etype37, _size34);
+            (*(this->success)).resize(_size34);
+            uint32_t _i38;
+            for (_i38 = 0; _i38 < _size34; ++_i38)
             {
-              xfer += iprot->readString((*(this->success))[_i31]);
+              xfer += iprot->readString((*(this->success))[_i38]);
             }
             xfer += iprot->readListEnd();
           }

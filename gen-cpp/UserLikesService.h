@@ -22,13 +22,12 @@ namespace movies {
 class UserLikesServiceIf {
  public:
   virtual ~UserLikesServiceIf() {}
-  virtual void GetMovieLikesByIds(std::vector<int64_t> & _return, const std::vector<std::string> & movie_ids) = 0;
-  virtual void UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike) = 0;
-  virtual void GetUsersLikedMovies(std::vector<std::string> & _return, const std::string& user_id) = 0;
+  virtual void UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike) = 0;
+  virtual void GetUsersLikedMovies(std::vector<std::string> & _return, const int64_t user_id) = 0;
   virtual int64_t GetMovieRating(const std::string& movie_id) = 0;
-  virtual void UserWatchMovie(const std::string& user_id, const std::string& movie_id) = 0;
+  virtual void UserWatchMovie(const int64_t user_id, const std::string& movie_id) = 0;
   virtual void AddUser(const std::string& user_name) = 0;
-  virtual void GetUserID(std::string& _return, const std::string& user_name) = 0;
+  virtual int64_t GetUserID(const std::string& user_name) = 0;
 };
 
 class UserLikesServiceIfFactory {
@@ -58,132 +57,26 @@ class UserLikesServiceIfSingletonFactory : virtual public UserLikesServiceIfFact
 class UserLikesServiceNull : virtual public UserLikesServiceIf {
  public:
   virtual ~UserLikesServiceNull() {}
-  void GetMovieLikesByIds(std::vector<int64_t> & /* _return */, const std::vector<std::string> & /* movie_ids */) {
+  void UserRateMovie(const int64_t /* user_id */, const std::string& /* movie_id */, const int64_t /* likeDislike */) {
     return;
   }
-  void UserRateMovie(const std::string& /* user_id */, const std::string& /* movie_id */, const int64_t /* likeDislike */) {
-    return;
-  }
-  void GetUsersLikedMovies(std::vector<std::string> & /* _return */, const std::string& /* user_id */) {
+  void GetUsersLikedMovies(std::vector<std::string> & /* _return */, const int64_t /* user_id */) {
     return;
   }
   int64_t GetMovieRating(const std::string& /* movie_id */) {
     int64_t _return = 0;
     return _return;
   }
-  void UserWatchMovie(const std::string& /* user_id */, const std::string& /* movie_id */) {
+  void UserWatchMovie(const int64_t /* user_id */, const std::string& /* movie_id */) {
     return;
   }
   void AddUser(const std::string& /* user_name */) {
     return;
   }
-  void GetUserID(std::string& /* _return */, const std::string& /* user_name */) {
-    return;
+  int64_t GetUserID(const std::string& /* user_name */) {
+    int64_t _return = 0;
+    return _return;
   }
-};
-
-typedef struct _UserLikesService_GetMovieLikesByIds_args__isset {
-  _UserLikesService_GetMovieLikesByIds_args__isset() : movie_ids(false) {}
-  bool movie_ids :1;
-} _UserLikesService_GetMovieLikesByIds_args__isset;
-
-class UserLikesService_GetMovieLikesByIds_args {
- public:
-
-  UserLikesService_GetMovieLikesByIds_args(const UserLikesService_GetMovieLikesByIds_args&);
-  UserLikesService_GetMovieLikesByIds_args& operator=(const UserLikesService_GetMovieLikesByIds_args&);
-  UserLikesService_GetMovieLikesByIds_args() {
-  }
-
-  virtual ~UserLikesService_GetMovieLikesByIds_args() noexcept;
-  std::vector<std::string>  movie_ids;
-
-  _UserLikesService_GetMovieLikesByIds_args__isset __isset;
-
-  void __set_movie_ids(const std::vector<std::string> & val);
-
-  bool operator == (const UserLikesService_GetMovieLikesByIds_args & rhs) const
-  {
-    if (!(movie_ids == rhs.movie_ids))
-      return false;
-    return true;
-  }
-  bool operator != (const UserLikesService_GetMovieLikesByIds_args &rhs) const {
-    return !(*this == rhs);
-  }
-
-  bool operator < (const UserLikesService_GetMovieLikesByIds_args & ) const;
-
-  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
-
-};
-
-
-class UserLikesService_GetMovieLikesByIds_pargs {
- public:
-
-
-  virtual ~UserLikesService_GetMovieLikesByIds_pargs() noexcept;
-  const std::vector<std::string> * movie_ids;
-
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
-
-};
-
-typedef struct _UserLikesService_GetMovieLikesByIds_result__isset {
-  _UserLikesService_GetMovieLikesByIds_result__isset() : success(false) {}
-  bool success :1;
-} _UserLikesService_GetMovieLikesByIds_result__isset;
-
-class UserLikesService_GetMovieLikesByIds_result {
- public:
-
-  UserLikesService_GetMovieLikesByIds_result(const UserLikesService_GetMovieLikesByIds_result&);
-  UserLikesService_GetMovieLikesByIds_result& operator=(const UserLikesService_GetMovieLikesByIds_result&);
-  UserLikesService_GetMovieLikesByIds_result() {
-  }
-
-  virtual ~UserLikesService_GetMovieLikesByIds_result() noexcept;
-  std::vector<int64_t>  success;
-
-  _UserLikesService_GetMovieLikesByIds_result__isset __isset;
-
-  void __set_success(const std::vector<int64_t> & val);
-
-  bool operator == (const UserLikesService_GetMovieLikesByIds_result & rhs) const
-  {
-    if (!(success == rhs.success))
-      return false;
-    return true;
-  }
-  bool operator != (const UserLikesService_GetMovieLikesByIds_result &rhs) const {
-    return !(*this == rhs);
-  }
-
-  bool operator < (const UserLikesService_GetMovieLikesByIds_result & ) const;
-
-  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
-
-};
-
-typedef struct _UserLikesService_GetMovieLikesByIds_presult__isset {
-  _UserLikesService_GetMovieLikesByIds_presult__isset() : success(false) {}
-  bool success :1;
-} _UserLikesService_GetMovieLikesByIds_presult__isset;
-
-class UserLikesService_GetMovieLikesByIds_presult {
- public:
-
-
-  virtual ~UserLikesService_GetMovieLikesByIds_presult() noexcept;
-  std::vector<int64_t> * success;
-
-  _UserLikesService_GetMovieLikesByIds_presult__isset __isset;
-
-  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-
 };
 
 typedef struct _UserLikesService_UserRateMovie_args__isset {
@@ -198,17 +91,17 @@ class UserLikesService_UserRateMovie_args {
 
   UserLikesService_UserRateMovie_args(const UserLikesService_UserRateMovie_args&);
   UserLikesService_UserRateMovie_args& operator=(const UserLikesService_UserRateMovie_args&);
-  UserLikesService_UserRateMovie_args() : user_id(), movie_id(), likeDislike(0) {
+  UserLikesService_UserRateMovie_args() : user_id(0), movie_id(), likeDislike(0) {
   }
 
   virtual ~UserLikesService_UserRateMovie_args() noexcept;
-  std::string user_id;
+  int64_t user_id;
   std::string movie_id;
   int64_t likeDislike;
 
   _UserLikesService_UserRateMovie_args__isset __isset;
 
-  void __set_user_id(const std::string& val);
+  void __set_user_id(const int64_t val);
 
   void __set_movie_id(const std::string& val);
 
@@ -241,7 +134,7 @@ class UserLikesService_UserRateMovie_pargs {
 
 
   virtual ~UserLikesService_UserRateMovie_pargs() noexcept;
-  const std::string* user_id;
+  const int64_t* user_id;
   const std::string* movie_id;
   const int64_t* likeDislike;
 
@@ -249,6 +142,10 @@ class UserLikesService_UserRateMovie_pargs {
 
 };
 
+typedef struct _UserLikesService_UserRateMovie_result__isset {
+  _UserLikesService_UserRateMovie_result__isset() : se(false) {}
+  bool se :1;
+} _UserLikesService_UserRateMovie_result__isset;
 
 class UserLikesService_UserRateMovie_result {
  public:
@@ -259,9 +156,16 @@ class UserLikesService_UserRateMovie_result {
   }
 
   virtual ~UserLikesService_UserRateMovie_result() noexcept;
+  ServiceException se;
 
-  bool operator == (const UserLikesService_UserRateMovie_result & /* rhs */) const
+  _UserLikesService_UserRateMovie_result__isset __isset;
+
+  void __set_se(const ServiceException& val);
+
+  bool operator == (const UserLikesService_UserRateMovie_result & rhs) const
   {
+    if (!(se == rhs.se))
+      return false;
     return true;
   }
   bool operator != (const UserLikesService_UserRateMovie_result &rhs) const {
@@ -275,12 +179,19 @@ class UserLikesService_UserRateMovie_result {
 
 };
 
+typedef struct _UserLikesService_UserRateMovie_presult__isset {
+  _UserLikesService_UserRateMovie_presult__isset() : se(false) {}
+  bool se :1;
+} _UserLikesService_UserRateMovie_presult__isset;
 
 class UserLikesService_UserRateMovie_presult {
  public:
 
 
   virtual ~UserLikesService_UserRateMovie_presult() noexcept;
+  ServiceException se;
+
+  _UserLikesService_UserRateMovie_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -296,15 +207,15 @@ class UserLikesService_GetUsersLikedMovies_args {
 
   UserLikesService_GetUsersLikedMovies_args(const UserLikesService_GetUsersLikedMovies_args&);
   UserLikesService_GetUsersLikedMovies_args& operator=(const UserLikesService_GetUsersLikedMovies_args&);
-  UserLikesService_GetUsersLikedMovies_args() : user_id() {
+  UserLikesService_GetUsersLikedMovies_args() : user_id(0) {
   }
 
   virtual ~UserLikesService_GetUsersLikedMovies_args() noexcept;
-  std::string user_id;
+  int64_t user_id;
 
   _UserLikesService_GetUsersLikedMovies_args__isset __isset;
 
-  void __set_user_id(const std::string& val);
+  void __set_user_id(const int64_t val);
 
   bool operator == (const UserLikesService_GetUsersLikedMovies_args & rhs) const
   {
@@ -329,15 +240,16 @@ class UserLikesService_GetUsersLikedMovies_pargs {
 
 
   virtual ~UserLikesService_GetUsersLikedMovies_pargs() noexcept;
-  const std::string* user_id;
+  const int64_t* user_id;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
 typedef struct _UserLikesService_GetUsersLikedMovies_result__isset {
-  _UserLikesService_GetUsersLikedMovies_result__isset() : success(false) {}
+  _UserLikesService_GetUsersLikedMovies_result__isset() : success(false), se(false) {}
   bool success :1;
+  bool se :1;
 } _UserLikesService_GetUsersLikedMovies_result__isset;
 
 class UserLikesService_GetUsersLikedMovies_result {
@@ -350,14 +262,19 @@ class UserLikesService_GetUsersLikedMovies_result {
 
   virtual ~UserLikesService_GetUsersLikedMovies_result() noexcept;
   std::vector<std::string>  success;
+  ServiceException se;
 
   _UserLikesService_GetUsersLikedMovies_result__isset __isset;
 
   void __set_success(const std::vector<std::string> & val);
 
+  void __set_se(const ServiceException& val);
+
   bool operator == (const UserLikesService_GetUsersLikedMovies_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(se == rhs.se))
       return false;
     return true;
   }
@@ -373,8 +290,9 @@ class UserLikesService_GetUsersLikedMovies_result {
 };
 
 typedef struct _UserLikesService_GetUsersLikedMovies_presult__isset {
-  _UserLikesService_GetUsersLikedMovies_presult__isset() : success(false) {}
+  _UserLikesService_GetUsersLikedMovies_presult__isset() : success(false), se(false) {}
   bool success :1;
+  bool se :1;
 } _UserLikesService_GetUsersLikedMovies_presult__isset;
 
 class UserLikesService_GetUsersLikedMovies_presult {
@@ -383,6 +301,7 @@ class UserLikesService_GetUsersLikedMovies_presult {
 
   virtual ~UserLikesService_GetUsersLikedMovies_presult() noexcept;
   std::vector<std::string> * success;
+  ServiceException se;
 
   _UserLikesService_GetUsersLikedMovies_presult__isset __isset;
 
@@ -440,8 +359,9 @@ class UserLikesService_GetMovieRating_pargs {
 };
 
 typedef struct _UserLikesService_GetMovieRating_result__isset {
-  _UserLikesService_GetMovieRating_result__isset() : success(false) {}
+  _UserLikesService_GetMovieRating_result__isset() : success(false), se(false) {}
   bool success :1;
+  bool se :1;
 } _UserLikesService_GetMovieRating_result__isset;
 
 class UserLikesService_GetMovieRating_result {
@@ -454,14 +374,19 @@ class UserLikesService_GetMovieRating_result {
 
   virtual ~UserLikesService_GetMovieRating_result() noexcept;
   int64_t success;
+  ServiceException se;
 
   _UserLikesService_GetMovieRating_result__isset __isset;
 
   void __set_success(const int64_t val);
 
+  void __set_se(const ServiceException& val);
+
   bool operator == (const UserLikesService_GetMovieRating_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(se == rhs.se))
       return false;
     return true;
   }
@@ -477,8 +402,9 @@ class UserLikesService_GetMovieRating_result {
 };
 
 typedef struct _UserLikesService_GetMovieRating_presult__isset {
-  _UserLikesService_GetMovieRating_presult__isset() : success(false) {}
+  _UserLikesService_GetMovieRating_presult__isset() : success(false), se(false) {}
   bool success :1;
+  bool se :1;
 } _UserLikesService_GetMovieRating_presult__isset;
 
 class UserLikesService_GetMovieRating_presult {
@@ -487,6 +413,7 @@ class UserLikesService_GetMovieRating_presult {
 
   virtual ~UserLikesService_GetMovieRating_presult() noexcept;
   int64_t* success;
+  ServiceException se;
 
   _UserLikesService_GetMovieRating_presult__isset __isset;
 
@@ -505,16 +432,16 @@ class UserLikesService_UserWatchMovie_args {
 
   UserLikesService_UserWatchMovie_args(const UserLikesService_UserWatchMovie_args&);
   UserLikesService_UserWatchMovie_args& operator=(const UserLikesService_UserWatchMovie_args&);
-  UserLikesService_UserWatchMovie_args() : user_id(), movie_id() {
+  UserLikesService_UserWatchMovie_args() : user_id(0), movie_id() {
   }
 
   virtual ~UserLikesService_UserWatchMovie_args() noexcept;
-  std::string user_id;
+  int64_t user_id;
   std::string movie_id;
 
   _UserLikesService_UserWatchMovie_args__isset __isset;
 
-  void __set_user_id(const std::string& val);
+  void __set_user_id(const int64_t val);
 
   void __set_movie_id(const std::string& val);
 
@@ -543,13 +470,17 @@ class UserLikesService_UserWatchMovie_pargs {
 
 
   virtual ~UserLikesService_UserWatchMovie_pargs() noexcept;
-  const std::string* user_id;
+  const int64_t* user_id;
   const std::string* movie_id;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
+typedef struct _UserLikesService_UserWatchMovie_result__isset {
+  _UserLikesService_UserWatchMovie_result__isset() : se(false) {}
+  bool se :1;
+} _UserLikesService_UserWatchMovie_result__isset;
 
 class UserLikesService_UserWatchMovie_result {
  public:
@@ -560,9 +491,16 @@ class UserLikesService_UserWatchMovie_result {
   }
 
   virtual ~UserLikesService_UserWatchMovie_result() noexcept;
+  ServiceException se;
 
-  bool operator == (const UserLikesService_UserWatchMovie_result & /* rhs */) const
+  _UserLikesService_UserWatchMovie_result__isset __isset;
+
+  void __set_se(const ServiceException& val);
+
+  bool operator == (const UserLikesService_UserWatchMovie_result & rhs) const
   {
+    if (!(se == rhs.se))
+      return false;
     return true;
   }
   bool operator != (const UserLikesService_UserWatchMovie_result &rhs) const {
@@ -576,12 +514,19 @@ class UserLikesService_UserWatchMovie_result {
 
 };
 
+typedef struct _UserLikesService_UserWatchMovie_presult__isset {
+  _UserLikesService_UserWatchMovie_presult__isset() : se(false) {}
+  bool se :1;
+} _UserLikesService_UserWatchMovie_presult__isset;
 
 class UserLikesService_UserWatchMovie_presult {
  public:
 
 
   virtual ~UserLikesService_UserWatchMovie_presult() noexcept;
+  ServiceException se;
+
+  _UserLikesService_UserWatchMovie_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -636,6 +581,10 @@ class UserLikesService_AddUser_pargs {
 
 };
 
+typedef struct _UserLikesService_AddUser_result__isset {
+  _UserLikesService_AddUser_result__isset() : se(false) {}
+  bool se :1;
+} _UserLikesService_AddUser_result__isset;
 
 class UserLikesService_AddUser_result {
  public:
@@ -646,9 +595,16 @@ class UserLikesService_AddUser_result {
   }
 
   virtual ~UserLikesService_AddUser_result() noexcept;
+  ServiceException se;
 
-  bool operator == (const UserLikesService_AddUser_result & /* rhs */) const
+  _UserLikesService_AddUser_result__isset __isset;
+
+  void __set_se(const ServiceException& val);
+
+  bool operator == (const UserLikesService_AddUser_result & rhs) const
   {
+    if (!(se == rhs.se))
+      return false;
     return true;
   }
   bool operator != (const UserLikesService_AddUser_result &rhs) const {
@@ -662,12 +618,19 @@ class UserLikesService_AddUser_result {
 
 };
 
+typedef struct _UserLikesService_AddUser_presult__isset {
+  _UserLikesService_AddUser_presult__isset() : se(false) {}
+  bool se :1;
+} _UserLikesService_AddUser_presult__isset;
 
 class UserLikesService_AddUser_presult {
  public:
 
 
   virtual ~UserLikesService_AddUser_presult() noexcept;
+  ServiceException se;
+
+  _UserLikesService_AddUser_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -723,8 +686,9 @@ class UserLikesService_GetUserID_pargs {
 };
 
 typedef struct _UserLikesService_GetUserID_result__isset {
-  _UserLikesService_GetUserID_result__isset() : success(false) {}
+  _UserLikesService_GetUserID_result__isset() : success(false), se(false) {}
   bool success :1;
+  bool se :1;
 } _UserLikesService_GetUserID_result__isset;
 
 class UserLikesService_GetUserID_result {
@@ -732,19 +696,24 @@ class UserLikesService_GetUserID_result {
 
   UserLikesService_GetUserID_result(const UserLikesService_GetUserID_result&);
   UserLikesService_GetUserID_result& operator=(const UserLikesService_GetUserID_result&);
-  UserLikesService_GetUserID_result() : success() {
+  UserLikesService_GetUserID_result() : success(0) {
   }
 
   virtual ~UserLikesService_GetUserID_result() noexcept;
-  std::string success;
+  int64_t success;
+  ServiceException se;
 
   _UserLikesService_GetUserID_result__isset __isset;
 
-  void __set_success(const std::string& val);
+  void __set_success(const int64_t val);
+
+  void __set_se(const ServiceException& val);
 
   bool operator == (const UserLikesService_GetUserID_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(se == rhs.se))
       return false;
     return true;
   }
@@ -760,8 +729,9 @@ class UserLikesService_GetUserID_result {
 };
 
 typedef struct _UserLikesService_GetUserID_presult__isset {
-  _UserLikesService_GetUserID_presult__isset() : success(false) {}
+  _UserLikesService_GetUserID_presult__isset() : success(false), se(false) {}
   bool success :1;
+  bool se :1;
 } _UserLikesService_GetUserID_presult__isset;
 
 class UserLikesService_GetUserID_presult {
@@ -769,7 +739,8 @@ class UserLikesService_GetUserID_presult {
 
 
   virtual ~UserLikesService_GetUserID_presult() noexcept;
-  std::string* success;
+  int64_t* success;
+  ServiceException se;
 
   _UserLikesService_GetUserID_presult__isset __isset;
 
@@ -802,27 +773,24 @@ class UserLikesServiceClient : virtual public UserLikesServiceIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void GetMovieLikesByIds(std::vector<int64_t> & _return, const std::vector<std::string> & movie_ids);
-  void send_GetMovieLikesByIds(const std::vector<std::string> & movie_ids);
-  void recv_GetMovieLikesByIds(std::vector<int64_t> & _return);
-  void UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike);
-  void send_UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike);
+  void UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike);
+  void send_UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike);
   void recv_UserRateMovie();
-  void GetUsersLikedMovies(std::vector<std::string> & _return, const std::string& user_id);
-  void send_GetUsersLikedMovies(const std::string& user_id);
+  void GetUsersLikedMovies(std::vector<std::string> & _return, const int64_t user_id);
+  void send_GetUsersLikedMovies(const int64_t user_id);
   void recv_GetUsersLikedMovies(std::vector<std::string> & _return);
   int64_t GetMovieRating(const std::string& movie_id);
   void send_GetMovieRating(const std::string& movie_id);
   int64_t recv_GetMovieRating();
-  void UserWatchMovie(const std::string& user_id, const std::string& movie_id);
-  void send_UserWatchMovie(const std::string& user_id, const std::string& movie_id);
+  void UserWatchMovie(const int64_t user_id, const std::string& movie_id);
+  void send_UserWatchMovie(const int64_t user_id, const std::string& movie_id);
   void recv_UserWatchMovie();
   void AddUser(const std::string& user_name);
   void send_AddUser(const std::string& user_name);
   void recv_AddUser();
-  void GetUserID(std::string& _return, const std::string& user_name);
+  int64_t GetUserID(const std::string& user_name);
   void send_GetUserID(const std::string& user_name);
-  void recv_GetUserID(std::string& _return);
+  int64_t recv_GetUserID();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -838,7 +806,6 @@ class UserLikesServiceProcessor : public ::apache::thrift::TDispatchProcessor {
   typedef  void (UserLikesServiceProcessor::*ProcessFunction)(int32_t, ::apache::thrift::protocol::TProtocol*, ::apache::thrift::protocol::TProtocol*, void*);
   typedef std::map<std::string, ProcessFunction> ProcessMap;
   ProcessMap processMap_;
-  void process_GetMovieLikesByIds(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_UserRateMovie(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_GetUsersLikedMovies(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_GetMovieRating(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
@@ -848,7 +815,6 @@ class UserLikesServiceProcessor : public ::apache::thrift::TDispatchProcessor {
  public:
   UserLikesServiceProcessor(::std::shared_ptr<UserLikesServiceIf> iface) :
     iface_(iface) {
-    processMap_["GetMovieLikesByIds"] = &UserLikesServiceProcessor::process_GetMovieLikesByIds;
     processMap_["UserRateMovie"] = &UserLikesServiceProcessor::process_UserRateMovie;
     processMap_["GetUsersLikedMovies"] = &UserLikesServiceProcessor::process_GetUsersLikedMovies;
     processMap_["GetMovieRating"] = &UserLikesServiceProcessor::process_GetMovieRating;
@@ -883,17 +849,7 @@ class UserLikesServiceMultiface : virtual public UserLikesServiceIf {
     ifaces_.push_back(iface);
   }
  public:
-  void GetMovieLikesByIds(std::vector<int64_t> & _return, const std::vector<std::string> & movie_ids) {
-    size_t sz = ifaces_.size();
-    size_t i = 0;
-    for (; i < (sz - 1); ++i) {
-      ifaces_[i]->GetMovieLikesByIds(_return, movie_ids);
-    }
-    ifaces_[i]->GetMovieLikesByIds(_return, movie_ids);
-    return;
-  }
-
-  void UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike) {
+  void UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
@@ -902,7 +858,7 @@ class UserLikesServiceMultiface : virtual public UserLikesServiceIf {
     ifaces_[i]->UserRateMovie(user_id, movie_id, likeDislike);
   }
 
-  void GetUsersLikedMovies(std::vector<std::string> & _return, const std::string& user_id) {
+  void GetUsersLikedMovies(std::vector<std::string> & _return, const int64_t user_id) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
@@ -921,7 +877,7 @@ class UserLikesServiceMultiface : virtual public UserLikesServiceIf {
     return ifaces_[i]->GetMovieRating(movie_id);
   }
 
-  void UserWatchMovie(const std::string& user_id, const std::string& movie_id) {
+  void UserWatchMovie(const int64_t user_id, const std::string& movie_id) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
@@ -939,14 +895,13 @@ class UserLikesServiceMultiface : virtual public UserLikesServiceIf {
     ifaces_[i]->AddUser(user_name);
   }
 
-  void GetUserID(std::string& _return, const std::string& user_name) {
+  int64_t GetUserID(const std::string& user_name) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->GetUserID(_return, user_name);
+      ifaces_[i]->GetUserID(user_name);
     }
-    ifaces_[i]->GetUserID(_return, user_name);
-    return;
+    return ifaces_[i]->GetUserID(user_name);
   }
 
 };
@@ -981,27 +936,24 @@ class UserLikesServiceConcurrentClient : virtual public UserLikesServiceIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void GetMovieLikesByIds(std::vector<int64_t> & _return, const std::vector<std::string> & movie_ids);
-  int32_t send_GetMovieLikesByIds(const std::vector<std::string> & movie_ids);
-  void recv_GetMovieLikesByIds(std::vector<int64_t> & _return, const int32_t seqid);
-  void UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike);
-  int32_t send_UserRateMovie(const std::string& user_id, const std::string& movie_id, const int64_t likeDislike);
+  void UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike);
+  int32_t send_UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike);
   void recv_UserRateMovie(const int32_t seqid);
-  void GetUsersLikedMovies(std::vector<std::string> & _return, const std::string& user_id);
-  int32_t send_GetUsersLikedMovies(const std::string& user_id);
+  void GetUsersLikedMovies(std::vector<std::string> & _return, const int64_t user_id);
+  int32_t send_GetUsersLikedMovies(const int64_t user_id);
   void recv_GetUsersLikedMovies(std::vector<std::string> & _return, const int32_t seqid);
   int64_t GetMovieRating(const std::string& movie_id);
   int32_t send_GetMovieRating(const std::string& movie_id);
   int64_t recv_GetMovieRating(const int32_t seqid);
-  void UserWatchMovie(const std::string& user_id, const std::string& movie_id);
-  int32_t send_UserWatchMovie(const std::string& user_id, const std::string& movie_id);
+  void UserWatchMovie(const int64_t user_id, const std::string& movie_id);
+  int32_t send_UserWatchMovie(const int64_t user_id, const std::string& movie_id);
   void recv_UserWatchMovie(const int32_t seqid);
   void AddUser(const std::string& user_name);
   int32_t send_AddUser(const std::string& user_name);
   void recv_AddUser(const int32_t seqid);
-  void GetUserID(std::string& _return, const std::string& user_name);
+  int64_t GetUserID(const std::string& user_name);
   int32_t send_GetUserID(const std::string& user_name);
-  void recv_GetUserID(std::string& _return, const int32_t seqid);
+  int64_t recv_GetUserID(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

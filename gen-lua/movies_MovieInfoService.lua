@@ -57,20 +57,20 @@ function MovieInfoServiceProcessor:process(iprot, oprot, server_ctx)
   local name, mtype, seqid = iprot:readMessageBegin()
   local func_name = 'process_' .. name
   if not self[func_name] or ttype(self[func_name]) ~= 'function' then
-    if oprot ~= nil then	
-      iprot:skip(TType.STRUCT)	
-      iprot:readMessageEnd()	
-      x = TApplicationException:new{	
-        errorCode = TApplicationException.UNKNOWN_METHOD	
-      }	
-      oprot:writeMessageBegin(name, TMessageType.EXCEPTION, seqid)	
-      x:write(oprot)	
-      oprot:writeMessageEnd()	
-      oprot.trans:flush()	
-    end	
-    return false, 'Unknown function '..name	
-  else	
-    return self[func_name](self, seqid, iprot, oprot, server_ctx)	
+    if oprot ~= nil then		
+      iprot:skip(TType.STRUCT)		
+      iprot:readMessageEnd()		
+      x = TApplicationException:new{		
+        errorCode = TApplicationException.UNKNOWN_METHOD		
+      }		
+      oprot:writeMessageBegin(name, TMessageType.EXCEPTION, seqid)		
+      x:write(oprot)		
+      oprot:writeMessageEnd()		
+      oprot.trans:flush()		
+    end		
+    return false, 'Unknown function '..name		
+  else		
+    return self[func_name](self, seqid, iprot, oprot, server_ctx)		
   end
 end
 
@@ -109,9 +109,9 @@ function GetMoviesByIds_args:read(iprot)
     elseif fid == 1 then
       if ftype == TType.LIST then
         self.movie_ids = {}
-        local _etype9, _size6 = iprot:readListBegin()
-        for _i=1,_size6 do
-          local _elem10 = iprot:readString()
+        local _etype9, _size6 = iprot:readListBegin()	
+        for _i=1,_size6 do	
+          local _elem10 = iprot:readString()	
           table.insert(self.movie_ids, _elem10)
         end
         iprot:readListEnd()

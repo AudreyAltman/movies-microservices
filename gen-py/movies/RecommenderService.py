@@ -19,6 +19,15 @@ all_structs = []
 
 
 class Iface(object):
+    def UploadRecommendations(self, user_id, movie_id):
+        """
+        Parameters:
+         - user_id
+         - movie_id
+
+        """
+        pass
+
     def GetRecommendations(self, user):
         """
         Parameters:
@@ -34,6 +43,40 @@ class Client(Iface):
         if oprot is not None:
             self._oprot = oprot
         self._seqid = 0
+
+    def UploadRecommendations(self, user_id, movie_id):
+        """
+        Parameters:
+         - user_id
+         - movie_id
+
+        """
+        self.send_UploadRecommendations(user_id, movie_id)
+        self.recv_UploadRecommendations()
+
+    def send_UploadRecommendations(self, user_id, movie_id):
+        self._oprot.writeMessageBegin('UploadRecommendations', TMessageType.CALL, self._seqid)
+        args = UploadRecommendations_args()
+        args.user_id = user_id
+        args.movie_id = movie_id
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_UploadRecommendations(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = UploadRecommendations_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.se is not None:
+            raise result.se
+        return
 
     def GetRecommendations(self, user):
         """
@@ -74,6 +117,7 @@ class Processor(Iface, TProcessor):
     def __init__(self, handler):
         self._handler = handler
         self._processMap = {}
+        self._processMap["UploadRecommendations"] = Processor.process_UploadRecommendations
         self._processMap["GetRecommendations"] = Processor.process_GetRecommendations
         self._on_message_begin = None
 
@@ -96,6 +140,32 @@ class Processor(Iface, TProcessor):
         else:
             self._processMap[name](self, seqid, iprot, oprot)
         return True
+
+    def process_UploadRecommendations(self, seqid, iprot, oprot):
+        args = UploadRecommendations_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = UploadRecommendations_result()
+        try:
+            self._handler.UploadRecommendations(args.user_id, args.movie_id)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except ServiceException as se:
+            msg_type = TMessageType.REPLY
+            result.se = se
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("UploadRecommendations", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
 
     def process_GetRecommendations(self, seqid, iprot, oprot):
         args = GetRecommendations_args()
@@ -124,6 +194,151 @@ class Processor(Iface, TProcessor):
         oprot.trans.flush()
 
 # HELPER FUNCTIONS AND STRUCTURES
+
+
+class UploadRecommendations_args(object):
+    """
+    Attributes:
+     - user_id
+     - movie_id
+
+    """
+
+
+    def __init__(self, user_id=None, movie_id=None,):
+        self.user_id = user_id
+        self.movie_id = movie_id
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I64:
+                    self.user_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.LIST:
+                    self.movie_id = []
+                    (_etype3, _size0) = iprot.readListBegin()
+                    for _i4 in range(_size0):
+                        _elem5 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        self.movie_id.append(_elem5)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('UploadRecommendations_args')
+        if self.user_id is not None:
+            oprot.writeFieldBegin('user_id', TType.I64, 1)
+            oprot.writeI64(self.user_id)
+            oprot.writeFieldEnd()
+        if self.movie_id is not None:
+            oprot.writeFieldBegin('movie_id', TType.LIST, 2)
+            oprot.writeListBegin(TType.STRING, len(self.movie_id))
+            for iter6 in self.movie_id:
+                oprot.writeString(iter6.encode('utf-8') if sys.version_info[0] == 2 else iter6)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(UploadRecommendations_args)
+UploadRecommendations_args.thrift_spec = (
+    None,  # 0
+    (1, TType.I64, 'user_id', None, None, ),  # 1
+    (2, TType.LIST, 'movie_id', (TType.STRING, 'UTF8', False), None, ),  # 2
+)
+
+
+class UploadRecommendations_result(object):
+    """
+    Attributes:
+     - se
+
+    """
+
+
+    def __init__(self, se=None,):
+        self.se = se
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.se = ServiceException()
+                    self.se.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('UploadRecommendations_result')
+        if self.se is not None:
+            oprot.writeFieldBegin('se', TType.STRUCT, 1)
+            self.se.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(UploadRecommendations_result)
+UploadRecommendations_result.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'se', [ServiceException, None], None, ),  # 1
+)
 
 
 class GetRecommendations_args(object):
@@ -213,10 +428,10 @@ class GetRecommendations_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype3, _size0) = iprot.readListBegin()
-                    for _i4 in range(_size0):
-                        _elem5 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                        self.success.append(_elem5)
+                    (_etype10, _size7) = iprot.readListBegin()
+                    for _i11 in range(_size7):
+                        _elem12 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem12)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -239,8 +454,8 @@ class GetRecommendations_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRING, len(self.success))
-            for iter6 in self.success:
-                oprot.writeString(iter6.encode('utf-8') if sys.version_info[0] == 2 else iter6)
+            for iter13 in self.success:
+                oprot.writeString(iter13.encode('utf-8') if sys.version_info[0] == 2 else iter13)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.se is not None:
