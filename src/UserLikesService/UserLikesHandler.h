@@ -313,7 +313,7 @@ int64_t UserLikesServiceHandler::GetMovieRating(const std::string& movie_id) {
 	  auto likes_json_char = bson_as_json(doc, nullptr);
 	  json likes_json = json::parse(likes_json_char);
 	  
-	  rating_return = likes_json["user_likes"].json::get<int>() - likes_json["user_dislikes"].json::get<int>();
+	  rating_return = likes_json["likes"].json::get<int>() - likes_json["dislikes"].json::get<int>();
 	}
 
 	// Cleanup mongo
