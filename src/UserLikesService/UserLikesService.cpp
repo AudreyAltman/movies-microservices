@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
     }
     r = false;
     while (!r) {
-      r = CreateIndex(mongodb_client, "user-likes", "user_id", true);
+      r = CreateIndex(mongodb_client, "user-likes", "user_id", false);
       if (!r) {
         LOG(error) << "Failed to create mongodb index for user-likes db, try again";
         sleep(1);
