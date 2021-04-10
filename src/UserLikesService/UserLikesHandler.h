@@ -29,7 +29,7 @@ class UserLikesServiceHandler : public UserLikesServiceIf {
   int64_t GetUserID(const std::string& user_name) override;
  private:
   mongoc_client_pool_t *_mongodb_client_pool;
-  static int64_t id_counter = 0;
+  static int64_t id_counter;
 };
 
 // Constructor
@@ -79,37 +79,34 @@ void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::st
 
 			// Get current rating
 			current_rating = user_movies_json["rating"].json::get<int>();
-			// If user rating is already set appropriately,
-			// break from loop (do nothing)
-			if (current_rating == likeDislike) {
-				break;
-			}
-			// If not set to correct value
+			// If user rating is not set appropriately,
 			// Update current rating to new rating in user likes
-			bson_t *update_user = bson_new();
-			BSON_APPEND_INT64(update_user, "user_id", user_id);
-			BSON_APPEND_UTF8(update_user, "movie_id", movie_id.c_str());
-			BSON_APPEND_INT64(update_user, "rating", likeDislike);				
-			bson_error_t error;
-			
-			bool updateUser = mongoc_collection_update_one(collection_users, doc_user, update_user, nullptr, nullptr, &error);	
-			
-			if (!updateUser) {
-				LOG(error) << "Failed to update user-likes record for user "
-					<< std::to_string(user_id) << " movie " << movie_id << " to MongoDB: " << error.message;
-				ServiceException se;
-				se.errorCode = ErrorCode::SE_MONGODB_ERROR;
-				se.message = error.message;
-				// Cleanup mongo
+			if (current_rating != likeDislike) {
+				bson_t *update_user = bson_new();
+				BSON_APPEND_INT64(update_user, "user_id", user_id);
+				BSON_APPEND_UTF8(update_user, "movie_id", movie_id.c_str());
+				BSON_APPEND_INT64(update_user, "rating", likeDislike);				
+				bson_error_t error;
+				
+				bool updateUser = mongoc_collection_update_one(collection_users, doc_user, update_user, nullptr, nullptr, &error);	
+				
+				if (!updateUser) {
+					LOG(error) << "Failed to update user-likes record for user "
+						<< std::to_string(user_id) << " movie " << movie_id << " to MongoDB: " << error.message;
+					ServiceException se;
+					se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+					se.message = error.message;
+					// Cleanup mongo
+					bson_destroy(update_user);
+					bson_destroy(query_user);
+					mongoc_cursor_destroy(cursor_user);
+					mongoc_collection_destroy(collection_users);
+					mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+					throw se;
+				}
 				bson_destroy(update_user);
-				bson_destroy(query_user);
-				mongoc_cursor_destroy(cursor_user);
-				mongoc_collection_destroy(collection_users);
-				mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-				throw se;
 			}
-			bson_destroy(update_user);
-	
+			
 		} else {
 			// Add record with user id, movie id, and rating
 			bson_t *add_user = bson_new();
@@ -407,7 +404,7 @@ void UserLikesServiceHandler::UserWatchMovie(const int64_t user_id, const std::s
 	if (!found) {
 		bson_t *add_movie = bson_new();
 		BSON_APPEND_INT64(add_movie, "user_id", user_id);
-		BSON_APPEND_UTF8(add_movie, "movie_id", movie_id);
+		BSON_APPEND_UTF8(add_movie, "movie_id", movie_id.c_str());
 		BSON_APPEND_INT64(add_movie, "rating", 0);
 		
 		bson_error_t error;
@@ -463,7 +460,7 @@ void UserLikesServiceHandler::AddUser(const std::string& user_name) {
 	bson_t *query = bson_new();
 	BSON_APPEND_UTF8(query, "user_name", user_name.c_str());
 	
-	mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection_users, query, nullptr, nullptr);
+	mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
 		
 	const bson_t *doc;
 	bool found_user = mongoc_cursor_next(cursor, &doc);
@@ -483,6 +480,7 @@ void UserLikesServiceHandler::AddUser(const std::string& user_name) {
 	BSON_APPEND_INT64(add_user, "user_id", id_counter++);
 	BSON_APPEND_UTF8(add_user, "user_name", user_name.c_str());
 	
+	bson_error_t error;
 	bool addUser = mongoc_collection_insert_one(collection, add_user, nullptr, nullptr, &error);	
 		
 	if (!addUser) {
@@ -532,7 +530,7 @@ int64_t UserLikesServiceHandler::GetUserID(const std::string& user_name) {
 	bson_t *query = bson_new();
 	BSON_APPEND_UTF8(query, "user_name", user_name.c_str());
 	
-	mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection_users, query, nullptr, nullptr);
+	mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
 		
 	const bson_t *doc;
 	bool found_user = mongoc_cursor_next(cursor, &doc);

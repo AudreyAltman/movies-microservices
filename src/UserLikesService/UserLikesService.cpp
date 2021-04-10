@@ -16,6 +16,7 @@ using apache::thrift::protocol::TBinaryProtocolFactory;
 
 using namespace movies;
 
+int64_t UserLikesServiceHandler::id_counter = 0;
 
 // signal handler code
 void sigintHandler(int sig) {
