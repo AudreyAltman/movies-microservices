@@ -110,7 +110,9 @@ void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::st
 					throw se;
 				}
 				bson_destroy(update_user);
-			}				
+			}	
+			// Check next record
+			found_user = mongoc_cursor_next(cursor_user, &doc_user);
 		}
 		// If user has not previously rated movie
 		if (!found_user_movie) {
@@ -271,9 +273,56 @@ void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::st
 }
 
 void UserLikesServiceHandler::GetUsersLikedMovies(std::vector<std::string>& _return, const int64_t user_id) {
-	// TO DO: look up movies with value 1 in like position
-	_return.push_back("123");
-	_return.push_back("abc");
+	// Initialize empty movie_id list
+    std::vector<std::string> _return_movie_ids;
+	
+	// Get mongo client
+	mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
+	if (!mongodb_client) {
+	  ServiceException se;
+	  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+	  se.message = "Failed to pop a client from MongoDB pool";
+	  throw se;
+	}
+
+	// Get mongo collection
+	auto collection = mongoc_client_get_collection(mongodb_client, "likes", "user-likes");
+	if (!collection) {
+	  ServiceException se;
+	  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+	  se.message = "Failed to create collection user from DB likes";
+	  mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+	  throw se;
+	}
+	
+	// Get users rated movies from database
+	bson_t *query = bson_new();
+	BSON_APPEND_INT64(query, "user_id", user_id);
+	
+	mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
+	const bson_t *doc;
+	bool found = mongoc_cursor_next(cursor, &doc);
+	
+	while (found) {
+		auto ratings_json_char = bson_as_json(doc, nullptr);
+		json ratings_json = json::parse(ratings_json_char);
+		
+		// If rating is a like, add to return vector
+		if (ratings_json["rating"].json::get<int>() == 1) {
+			_return_movie_ids.push_back(ratings_json["movie_id"]);
+		}
+		// Check next record
+		found = mongoc_cursor_next(cursor, &doc);
+	}
+	
+	_return = _return_movie_ids;
+	
+	// Cleanup mongo
+    bson_destroy(query);
+    mongoc_cursor_destroy(cursor);
+    mongoc_collection_destroy(collection);
+    mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+    mongoc_cleanup ();
 }
 
 int64_t UserLikesServiceHandler::GetMovieRating(const std::string& movie_id) {
