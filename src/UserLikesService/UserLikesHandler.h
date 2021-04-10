@@ -65,57 +65,50 @@ void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::st
 		// Check if record exists already for user and movie
 		bson_t *query_user = bson_new();
 		BSON_APPEND_INT64(query_user, "user_id", user_id);
+		BSON_APPEND_UTF8(query_user, "movie_id", movie_id.c_str());
 		mongoc_cursor_t *cursor_user = mongoc_collection_find_with_opts(collection_users, query_user, nullptr, nullptr);
 		
 		const bson_t *doc_user;
-		bool found_user = mongoc_cursor_next(cursor_user, &doc_user);
-		
-		bool found_user_movie = false;
-		while (found_user && !found_user_movie) {
+		bool found_user_movie = mongoc_cursor_next(cursor_user, &doc_user);
+	
+		if (found_user_movie) {
 			// Check to see if user has rated movie
 			auto user_movies_json_char = bson_as_json(doc_user, nullptr);
 			json user_movies_json = json::parse(user_movies_json_char);
+
+			// Get current rating
+			current_rating = user_movies_json["rating"].json::get<int>();
+			// If user rating is already set appropriately,
+			// break from loop (do nothing)
+			if (current_rating == likeDislike) {
+				break;
+			}
+			// If not set to correct value
+			// Update current rating to new rating in user likes
+			bson_t *update_user = bson_new();
+			BSON_APPEND_INT64(update_user, "user_id", user_id);
+			BSON_APPEND_UTF8(update_user, "movie_id", movie_id.c_str());
+			BSON_APPEND_INT64(update_user, "rating", likeDislike);				
+			bson_error_t error;
 			
-			if (user_movies_json["movie_id"] == movie_id) {
-				found_user_movie = true;
-				
-				// Get current rating
-				current_rating = user_movies_json["rating"].json::get<int>();
-				// If user rating is already set appropriately,
-				// break from loop (do nothing)
-				if (current_rating == likeDislike) {
-					break;
-				}
-				// If not set to correct value
-				// Update current rating to new rating in user likes
-				bson_t *update_user = bson_new();
-				BSON_APPEND_INT64(update_user, "user_id", user_id);
-				BSON_APPEND_UTF8(update_user, "movie_id", movie_id.c_str());
-				BSON_APPEND_INT64(update_user, "rating", likeDislike);				
-				bson_error_t error;
-				
-				bool updateUser = mongoc_collection_update_one(collection_users, doc_user, update_user, nullptr, nullptr, &error);	
-				
-				if (!updateUser) {
-					LOG(error) << "Failed to update user-likes record for user "
-						<< std::to_string(user_id) << " movie " << movie_id << " to MongoDB: " << error.message;
-					ServiceException se;
-					se.errorCode = ErrorCode::SE_MONGODB_ERROR;
-					se.message = error.message;
-					// Cleanup mongo
-					bson_destroy(update_user);
-					bson_destroy(query_user);
-					mongoc_collection_destroy(collection_users);
-					mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-					throw se;
-				}
+			bool updateUser = mongoc_collection_update_one(collection_users, doc_user, update_user, nullptr, nullptr, &error);	
+			
+			if (!updateUser) {
+				LOG(error) << "Failed to update user-likes record for user "
+					<< std::to_string(user_id) << " movie " << movie_id << " to MongoDB: " << error.message;
+				ServiceException se;
+				se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+				se.message = error.message;
+				// Cleanup mongo
 				bson_destroy(update_user);
-			}	
-			// Check next record
-			found_user = mongoc_cursor_next(cursor_user, &doc_user);
-		}
-		// If user has not previously rated movie
-		if (!found_user_movie) {
+				bson_destroy(query_user);
+				mongoc_collection_destroy(collection_users);
+				mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+				throw se;
+			}
+			bson_destroy(update_user);
+	
+		} else {
 			// Add record with user id, movie id, and rating
 			bson_t *add_user = bson_new();
 			BSON_APPEND_INT64(add_user, "user_id", user_id);
