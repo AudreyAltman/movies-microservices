@@ -29,6 +29,7 @@ class UserLikesServiceHandler : public UserLikesServiceIf {
   int64_t GetUserID(const std::string& user_name) override;
  private:
   mongoc_client_pool_t *_mongodb_client_pool;
+  static int64_t id_counter = 0;
 };
 
 // Constructor
@@ -102,6 +103,7 @@ void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::st
 				// Cleanup mongo
 				bson_destroy(update_user);
 				bson_destroy(query_user);
+				mongoc_cursor_destroy(cursor_user);
 				mongoc_collection_destroy(collection_users);
 				mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
 				throw se;
@@ -127,6 +129,7 @@ void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::st
 				// Cleanup mongo
 				bson_destroy(add_user);
 				bson_destroy(query_user);
+				mongoc_cursor_destroy(cursor_user);
 				mongoc_collection_destroy(collection_users);
 				mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
 				throw se;
@@ -265,6 +268,7 @@ void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::st
 	return;
 }
 
+// Remote Procedure "GetUsersLikedMovies"
 void UserLikesServiceHandler::GetUsersLikedMovies(std::vector<std::string>& _return, const int64_t user_id) {
 	// Initialize empty movie_id list
     std::vector<std::string> _return_movie_ids;
@@ -318,6 +322,7 @@ void UserLikesServiceHandler::GetUsersLikedMovies(std::vector<std::string>& _ret
     mongoc_cleanup ();
 }
 
+// Remote Procedure "GetMovieRating"
 int64_t UserLikesServiceHandler::GetMovieRating(const std::string& movie_id) {
 	int64_t rating_return = 0;
 
@@ -368,6 +373,7 @@ int64_t UserLikesServiceHandler::GetMovieRating(const std::string& movie_id) {
 	return rating_return;
 }
 
+// Remote Procedure "UserWatchMovie"
 void UserLikesServiceHandler::UserWatchMovie(const int64_t user_id, const std::string& movie_id) {
 	// Get mongo client
 	mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
@@ -432,20 +438,128 @@ void UserLikesServiceHandler::UserWatchMovie(const int64_t user_id, const std::s
 	mongoc_cleanup();
 }
 
+// Remote Procedure "AddUser"
 void UserLikesServiceHandler::AddUser(const std::string& user_name) {
-	// TO DO: add user to database and dynamically assign user_id
-	if (user_name != "") {
-		// validate that username does not already exist
-		// add user to database
+	// Get mongo client
+	mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
+	if (!mongodb_client) {
+	  ServiceException se;
+	  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+	  se.message = "Failed to pop a client from MongoDB pool";
+	  throw se;
 	}
-	else {
-		return;
+
+	// Get mongo collection
+	auto collection = mongoc_client_get_collection(mongodb_client, "likes", "users");
+	if (!collection) {
+	  ServiceException se;
+	  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+	  se.message = "Failed to create collection user from DB likes";
+	  mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+	  throw se;
 	}
+	
+	// Check if user_name already exists
+	bson_t *query = bson_new();
+	BSON_APPEND_UTF8(query, "user_name", user_name.c_str());
+	
+	mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection_users, query, nullptr, nullptr);
+		
+	const bson_t *doc;
+	bool found_user = mongoc_cursor_next(cursor, &doc);
+	
+	if (found_user) {
+		ServiceException se;
+        se.errorCode = ErrorCode::SE_THRIFT_HANDLER_ERROR;
+        se.message = "User name " + user_name + " already existed in MongoDB Users";
+		bson_destroy(query);
+		mongoc_cursor_destroy(cursor);
+		mongoc_collection_destroy(collection);
+		mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+		throw se;
+	}
+	
+	bson_t *add_user = bson_new();
+	BSON_APPEND_INT64(add_user, "user_id", id_counter++);
+	BSON_APPEND_UTF8(add_user, "user_name", user_name.c_str());
+	
+	bool addUser = mongoc_collection_insert_one(collection, add_user, nullptr, nullptr, &error);	
+		
+	if (!addUser) {
+		LOG(error) << "Failed to add users record for user name " << user_name <<" to MongoDB: " << error.message;
+		ServiceException se;
+		se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+		se.message = error.message;
+		// Cleanup mongo
+		bson_destroy(add_user);
+		bson_destroy(query);
+		mongoc_cursor_destroy(cursor);
+		mongoc_collection_destroy(collection);
+		mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+		throw se;
+	}
+	
+	// Cleanup mongo
+	bson_destroy(add_user);
+	bson_destroy(query);
+	mongoc_cursor_destroy(cursor);
+	mongoc_collection_destroy(collection);
+	mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
 }
 
+// Remote Procedure "GetUserID"
 int64_t UserLikesServiceHandler::GetUserID(const std::string& user_name) {
-	// TO DO: get user ID based on username
-	return 8473;
+	// Get mongo client
+	mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
+	if (!mongodb_client) {
+	  ServiceException se;
+	  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+	  se.message = "Failed to pop a client from MongoDB pool";
+	  throw se;
+	}
+
+	// Get mongo collection
+	auto collection = mongoc_client_get_collection(mongodb_client, "likes", "users");
+	if (!collection) {
+	  ServiceException se;
+	  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+	  se.message = "Failed to create collection user from DB likes";
+	  mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+	  throw se;
+	}
+	
+	// Make sure user_name exists
+	bson_t *query = bson_new();
+	BSON_APPEND_UTF8(query, "user_name", user_name.c_str());
+	
+	mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection_users, query, nullptr, nullptr);
+		
+	const bson_t *doc;
+	bool found_user = mongoc_cursor_next(cursor, &doc);
+	
+	if (!found_user) {
+		ServiceException se;
+        se.errorCode = ErrorCode::SE_THRIFT_HANDLER_ERROR;
+        se.message = "User name " + user_name + " does not exist in MongoDB Users";
+		bson_destroy(query);
+		mongoc_cursor_destroy(cursor);
+		mongoc_collection_destroy(collection);
+		mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+		throw se;
+	}
+	
+	auto user_json_char = bson_as_json(doc, nullptr);
+	json user_json = json::parse(user_json_char);
+	
+	int64_t _return_id = user_json["user_id"].json::get<int>();
+	
+	// Cleanup mongo
+	bson_destroy(query);
+	mongoc_cursor_destroy(cursor);
+	mongoc_collection_destroy(collection);
+	mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+
+	return _return_id;
 }
 
 } // namespace movies
