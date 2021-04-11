@@ -34,6 +34,10 @@ service MovieInfoService{
   list<string> GetMoviesByIds(
     1: list<string> movie_ids
   )
+
+  list<string> GetMoviesByTitle(
+    1: string movie_string
+  )throws (1: ServiceException se)
 }
 
 service UserLikesService{

@@ -7,6 +7,7 @@ add_executable(
 
 target_include_directories(
 	MovieInfoService PRIVATE
+	${MONGOC_INCLUDE_DIRS}
 )
 
 target_link_libraries(
@@ -15,6 +16,7 @@ target_link_libraries(
     ${THRIFT_LIB}
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
+    ${MONGOC_LIBRARIES}
     Boost::log
     Boost::log_setup
 )
