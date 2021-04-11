@@ -122,46 +122,9 @@ void UserLikesServiceHandler::UserRateMovie(const std::string& user_id, const st
 }
 
 void UserLikesServiceHandler::GetUsersLikedMovies(std::vector<std::string>& _return, const std::string& user_id) {
-
-    // Get mongo client
-    mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
-
-    // Get mongo collection
-    auto collection = mongoc_client_get_collection(
-        mongodb_client, "user-likes", "user-likes");
-
-    if (!collection) {
-       ServiceException se;
-       se.errorCode = ErrorCode::SE_MONGODB_ERROR;
-       se.message = "Failed to create collection user from DB recommender";
-       mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-       throw se;
-    }
-
-    // Get movies rated by this user from database
-    bson_t *query = bson_new();
-    BSON_APPEND_UTF8(query, "user_id", user_id.c_str());
-
-    mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
-    const bson_t *doc;
-    bool found = mongoc_cursor_next(cursor, &doc);
-
-    if (found) {
-       auto recommendations_json_char = bson_as_json(doc, nullptr);
-       json recommendations_json = json::parse(recommendations_json_char);
-
-       _return.push_back(recommendations_json["movie_id"]);
-    }
-    // Cleanup mongo
-    bson_destroy(query);
-    mongoc_cursor_destroy(cursor);
-    mongoc_collection_destroy(collection);
-    mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-    mongoc_cleanup ();
-
 	// TO DO: look up movies with value 1 in like position
-//	_return.push_back("123");
-//	_return.push_back("abc");
+	_return.push_back("123");
+	_return.push_back("abc");
 }
 
 int64_t UserLikesServiceHandler::GetMovieRating(const std::string& movie_id) {
