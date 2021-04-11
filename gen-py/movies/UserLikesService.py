@@ -19,14 +19,6 @@ all_structs = []
 
 
 class Iface(object):
-    def GetMovieLikesByIds(self, movie_ids):
-        """
-        Parameters:
-         - movie_ids
-
-        """
-        pass
-
     def UserRateMovie(self, user_id, movie_id, likeDislike):
         """
         Parameters:
@@ -86,38 +78,6 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def GetMovieLikesByIds(self, movie_ids):
-        """
-        Parameters:
-         - movie_ids
-
-        """
-        self.send_GetMovieLikesByIds(movie_ids)
-        return self.recv_GetMovieLikesByIds()
-
-    def send_GetMovieLikesByIds(self, movie_ids):
-        self._oprot.writeMessageBegin('GetMovieLikesByIds', TMessageType.CALL, self._seqid)
-        args = GetMovieLikesByIds_args()
-        args.movie_ids = movie_ids
-        args.write(self._oprot)
-        self._oprot.writeMessageEnd()
-        self._oprot.trans.flush()
-
-    def recv_GetMovieLikesByIds(self):
-        iprot = self._iprot
-        (fname, mtype, rseqid) = iprot.readMessageBegin()
-        if mtype == TMessageType.EXCEPTION:
-            x = TApplicationException()
-            x.read(iprot)
-            iprot.readMessageEnd()
-            raise x
-        result = GetMovieLikesByIds_result()
-        result.read(iprot)
-        iprot.readMessageEnd()
-        if result.success is not None:
-            return result.success
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "GetMovieLikesByIds failed: unknown result")
-
     def UserRateMovie(self, user_id, movie_id, likeDislike):
         """
         Parameters:
@@ -150,6 +110,8 @@ class Client(Iface):
         result = UserRateMovie_result()
         result.read(iprot)
         iprot.readMessageEnd()
+        if result.se is not None:
+            raise result.se
         return
 
     def GetUsersLikedMovies(self, user_id):
@@ -182,6 +144,8 @@ class Client(Iface):
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
+        if result.se is not None:
+            raise result.se
         raise TApplicationException(TApplicationException.MISSING_RESULT, "GetUsersLikedMovies failed: unknown result")
 
     def GetMovieRating(self, movie_id):
@@ -214,6 +178,8 @@ class Client(Iface):
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
+        if result.se is not None:
+            raise result.se
         raise TApplicationException(TApplicationException.MISSING_RESULT, "GetMovieRating failed: unknown result")
 
     def UserWatchMovie(self, user_id, movie_id):
@@ -246,6 +212,8 @@ class Client(Iface):
         result = UserWatchMovie_result()
         result.read(iprot)
         iprot.readMessageEnd()
+        if result.se is not None:
+            raise result.se
         return
 
     def AddUser(self, user_name):
@@ -276,6 +244,8 @@ class Client(Iface):
         result = AddUser_result()
         result.read(iprot)
         iprot.readMessageEnd()
+        if result.se is not None:
+            raise result.se
         return
 
     def GetUserID(self, user_name):
@@ -308,6 +278,8 @@ class Client(Iface):
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
+        if result.se is not None:
+            raise result.se
         raise TApplicationException(TApplicationException.MISSING_RESULT, "GetUserID failed: unknown result")
 
 
@@ -315,7 +287,6 @@ class Processor(Iface, TProcessor):
     def __init__(self, handler):
         self._handler = handler
         self._processMap = {}
-        self._processMap["GetMovieLikesByIds"] = Processor.process_GetMovieLikesByIds
         self._processMap["UserRateMovie"] = Processor.process_UserRateMovie
         self._processMap["GetUsersLikedMovies"] = Processor.process_GetUsersLikedMovies
         self._processMap["GetMovieRating"] = Processor.process_GetMovieRating
@@ -344,29 +315,6 @@ class Processor(Iface, TProcessor):
             self._processMap[name](self, seqid, iprot, oprot)
         return True
 
-    def process_GetMovieLikesByIds(self, seqid, iprot, oprot):
-        args = GetMovieLikesByIds_args()
-        args.read(iprot)
-        iprot.readMessageEnd()
-        result = GetMovieLikesByIds_result()
-        try:
-            result.success = self._handler.GetMovieLikesByIds(args.movie_ids)
-            msg_type = TMessageType.REPLY
-        except TTransport.TTransportException:
-            raise
-        except TApplicationException as ex:
-            logging.exception('TApplication exception in handler')
-            msg_type = TMessageType.EXCEPTION
-            result = ex
-        except Exception:
-            logging.exception('Unexpected exception in handler')
-            msg_type = TMessageType.EXCEPTION
-            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("GetMovieLikesByIds", msg_type, seqid)
-        result.write(oprot)
-        oprot.writeMessageEnd()
-        oprot.trans.flush()
-
     def process_UserRateMovie(self, seqid, iprot, oprot):
         args = UserRateMovie_args()
         args.read(iprot)
@@ -377,6 +325,9 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
+        except ServiceException as se:
+            msg_type = TMessageType.REPLY
+            result.se = se
         except TApplicationException as ex:
             logging.exception('TApplication exception in handler')
             msg_type = TMessageType.EXCEPTION
@@ -400,6 +351,9 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
+        except ServiceException as se:
+            msg_type = TMessageType.REPLY
+            result.se = se
         except TApplicationException as ex:
             logging.exception('TApplication exception in handler')
             msg_type = TMessageType.EXCEPTION
@@ -423,6 +377,9 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
+        except ServiceException as se:
+            msg_type = TMessageType.REPLY
+            result.se = se
         except TApplicationException as ex:
             logging.exception('TApplication exception in handler')
             msg_type = TMessageType.EXCEPTION
@@ -446,6 +403,9 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
+        except ServiceException as se:
+            msg_type = TMessageType.REPLY
+            result.se = se
         except TApplicationException as ex:
             logging.exception('TApplication exception in handler')
             msg_type = TMessageType.EXCEPTION
@@ -469,6 +429,9 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
+        except ServiceException as se:
+            msg_type = TMessageType.REPLY
+            result.se = se
         except TApplicationException as ex:
             logging.exception('TApplication exception in handler')
             msg_type = TMessageType.EXCEPTION
@@ -492,6 +455,9 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
+        except ServiceException as se:
+            msg_type = TMessageType.REPLY
+            result.se = se
         except TApplicationException as ex:
             logging.exception('TApplication exception in handler')
             msg_type = TMessageType.EXCEPTION
@@ -506,145 +472,6 @@ class Processor(Iface, TProcessor):
         oprot.trans.flush()
 
 # HELPER FUNCTIONS AND STRUCTURES
-
-
-class GetMovieLikesByIds_args(object):
-    """
-    Attributes:
-     - movie_ids
-
-    """
-
-
-    def __init__(self, movie_ids=None,):
-        self.movie_ids = movie_ids
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 1:
-                if ftype == TType.LIST:
-                    self.movie_ids = []
-                    (_etype24, _size21) = iprot.readListBegin()
-                    for _i25 in range(_size21):
-                        _elem26 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                        self.movie_ids.append(_elem26)
-                    iprot.readListEnd()
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('GetMovieLikesByIds_args')
-        if self.movie_ids is not None:
-            oprot.writeFieldBegin('movie_ids', TType.LIST, 1)
-            oprot.writeListBegin(TType.STRING, len(self.movie_ids))
-            for iter27 in self.movie_ids:
-                oprot.writeString(iter27.encode('utf-8') if sys.version_info[0] == 2 else iter27)
-            oprot.writeListEnd()
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(GetMovieLikesByIds_args)
-GetMovieLikesByIds_args.thrift_spec = (
-    None,  # 0
-    (1, TType.LIST, 'movie_ids', (TType.STRING, 'UTF8', False), None, ),  # 1
-)
-
-
-class GetMovieLikesByIds_result(object):
-    """
-    Attributes:
-     - success
-
-    """
-
-
-    def __init__(self, success=None,):
-        self.success = success
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 0:
-                if ftype == TType.LIST:
-                    self.success = []
-                    (_etype31, _size28) = iprot.readListBegin()
-                    for _i32 in range(_size28):
-                        _elem33 = iprot.readI64()
-                        self.success.append(_elem33)
-                    iprot.readListEnd()
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('GetMovieLikesByIds_result')
-        if self.success is not None:
-            oprot.writeFieldBegin('success', TType.LIST, 0)
-            oprot.writeListBegin(TType.I64, len(self.success))
-            for iter34 in self.success:
-                oprot.writeI64(iter34)
-            oprot.writeListEnd()
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(GetMovieLikesByIds_result)
-GetMovieLikesByIds_result.thrift_spec = (
-    (0, TType.LIST, 'success', (TType.I64, None, False), None, ),  # 0
-)
 
 
 class UserRateMovie_args(object):
@@ -672,8 +499,8 @@ class UserRateMovie_args(object):
             if ftype == TType.STOP:
                 break
             if fid == 1:
-                if ftype == TType.STRING:
-                    self.user_id = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.I64:
+                    self.user_id = iprot.readI64()
                 else:
                     iprot.skip(ftype)
             elif fid == 2:
@@ -697,8 +524,8 @@ class UserRateMovie_args(object):
             return
         oprot.writeStructBegin('UserRateMovie_args')
         if self.user_id is not None:
-            oprot.writeFieldBegin('user_id', TType.STRING, 1)
-            oprot.writeString(self.user_id.encode('utf-8') if sys.version_info[0] == 2 else self.user_id)
+            oprot.writeFieldBegin('user_id', TType.I64, 1)
+            oprot.writeI64(self.user_id)
             oprot.writeFieldEnd()
         if self.movie_id is not None:
             oprot.writeFieldBegin('movie_id', TType.STRING, 2)
@@ -727,14 +554,22 @@ class UserRateMovie_args(object):
 all_structs.append(UserRateMovie_args)
 UserRateMovie_args.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'user_id', 'UTF8', None, ),  # 1
+    (1, TType.I64, 'user_id', None, None, ),  # 1
     (2, TType.STRING, 'movie_id', 'UTF8', None, ),  # 2
     (3, TType.I64, 'likeDislike', None, None, ),  # 3
 )
 
 
 class UserRateMovie_result(object):
+    """
+    Attributes:
+     - se
 
+    """
+
+
+    def __init__(self, se=None,):
+        self.se = se
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -745,6 +580,12 @@ class UserRateMovie_result(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.se = ServiceException()
+                    self.se.read(iprot)
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -755,6 +596,10 @@ class UserRateMovie_result(object):
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
         oprot.writeStructBegin('UserRateMovie_result')
+        if self.se is not None:
+            oprot.writeFieldBegin('se', TType.STRUCT, 1)
+            self.se.write(oprot)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -773,6 +618,8 @@ class UserRateMovie_result(object):
         return not (self == other)
 all_structs.append(UserRateMovie_result)
 UserRateMovie_result.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'se', [ServiceException, None], None, ),  # 1
 )
 
 
@@ -797,8 +644,8 @@ class GetUsersLikedMovies_args(object):
             if ftype == TType.STOP:
                 break
             if fid == 1:
-                if ftype == TType.STRING:
-                    self.user_id = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.I64:
+                    self.user_id = iprot.readI64()
                 else:
                     iprot.skip(ftype)
             else:
@@ -812,8 +659,8 @@ class GetUsersLikedMovies_args(object):
             return
         oprot.writeStructBegin('GetUsersLikedMovies_args')
         if self.user_id is not None:
-            oprot.writeFieldBegin('user_id', TType.STRING, 1)
-            oprot.writeString(self.user_id.encode('utf-8') if sys.version_info[0] == 2 else self.user_id)
+            oprot.writeFieldBegin('user_id', TType.I64, 1)
+            oprot.writeI64(self.user_id)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -834,7 +681,7 @@ class GetUsersLikedMovies_args(object):
 all_structs.append(GetUsersLikedMovies_args)
 GetUsersLikedMovies_args.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'user_id', 'UTF8', None, ),  # 1
+    (1, TType.I64, 'user_id', None, None, ),  # 1
 )
 
 
@@ -842,12 +689,14 @@ class GetUsersLikedMovies_result(object):
     """
     Attributes:
      - success
+     - se
 
     """
 
 
-    def __init__(self, success=None,):
+    def __init__(self, success=None, se=None,):
         self.success = success
+        self.se = se
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -861,11 +710,17 @@ class GetUsersLikedMovies_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype38, _size35) = iprot.readListBegin()
-                    for _i39 in range(_size35):
-                        _elem40 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                        self.success.append(_elem40)
+                    (_etype31, _size28) = iprot.readListBegin()
+                    for _i32 in range(_size28):
+                        _elem33 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem33)
                     iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.se = ServiceException()
+                    self.se.read(iprot)
                 else:
                     iprot.skip(ftype)
             else:
@@ -881,9 +736,13 @@ class GetUsersLikedMovies_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRING, len(self.success))
-            for iter41 in self.success:
-                oprot.writeString(iter41.encode('utf-8') if sys.version_info[0] == 2 else iter41)
+            for iter34 in self.success:
+                oprot.writeString(iter34.encode('utf-8') if sys.version_info[0] == 2 else iter34)
             oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.se is not None:
+            oprot.writeFieldBegin('se', TType.STRUCT, 1)
+            self.se.write(oprot)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -904,6 +763,7 @@ class GetUsersLikedMovies_result(object):
 all_structs.append(GetUsersLikedMovies_result)
 GetUsersLikedMovies_result.thrift_spec = (
     (0, TType.LIST, 'success', (TType.STRING, 'UTF8', False), None, ),  # 0
+    (1, TType.STRUCT, 'se', [ServiceException, None], None, ),  # 1
 )
 
 
@@ -973,12 +833,14 @@ class GetMovieRating_result(object):
     """
     Attributes:
      - success
+     - se
 
     """
 
 
-    def __init__(self, success=None,):
+    def __init__(self, success=None, se=None,):
         self.success = success
+        self.se = se
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -994,6 +856,12 @@ class GetMovieRating_result(object):
                     self.success = iprot.readI64()
                 else:
                     iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.se = ServiceException()
+                    self.se.read(iprot)
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1007,6 +875,10 @@ class GetMovieRating_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.I64, 0)
             oprot.writeI64(self.success)
+            oprot.writeFieldEnd()
+        if self.se is not None:
+            oprot.writeFieldBegin('se', TType.STRUCT, 1)
+            self.se.write(oprot)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -1027,6 +899,7 @@ class GetMovieRating_result(object):
 all_structs.append(GetMovieRating_result)
 GetMovieRating_result.thrift_spec = (
     (0, TType.I64, 'success', None, None, ),  # 0
+    (1, TType.STRUCT, 'se', [ServiceException, None], None, ),  # 1
 )
 
 
@@ -1053,8 +926,8 @@ class UserWatchMovie_args(object):
             if ftype == TType.STOP:
                 break
             if fid == 1:
-                if ftype == TType.STRING:
-                    self.user_id = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.I64:
+                    self.user_id = iprot.readI64()
                 else:
                     iprot.skip(ftype)
             elif fid == 2:
@@ -1073,8 +946,8 @@ class UserWatchMovie_args(object):
             return
         oprot.writeStructBegin('UserWatchMovie_args')
         if self.user_id is not None:
-            oprot.writeFieldBegin('user_id', TType.STRING, 1)
-            oprot.writeString(self.user_id.encode('utf-8') if sys.version_info[0] == 2 else self.user_id)
+            oprot.writeFieldBegin('user_id', TType.I64, 1)
+            oprot.writeI64(self.user_id)
             oprot.writeFieldEnd()
         if self.movie_id is not None:
             oprot.writeFieldBegin('movie_id', TType.STRING, 2)
@@ -1099,13 +972,21 @@ class UserWatchMovie_args(object):
 all_structs.append(UserWatchMovie_args)
 UserWatchMovie_args.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'user_id', 'UTF8', None, ),  # 1
+    (1, TType.I64, 'user_id', None, None, ),  # 1
     (2, TType.STRING, 'movie_id', 'UTF8', None, ),  # 2
 )
 
 
 class UserWatchMovie_result(object):
+    """
+    Attributes:
+     - se
 
+    """
+
+
+    def __init__(self, se=None,):
+        self.se = se
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1116,6 +997,12 @@ class UserWatchMovie_result(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.se = ServiceException()
+                    self.se.read(iprot)
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1126,6 +1013,10 @@ class UserWatchMovie_result(object):
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
         oprot.writeStructBegin('UserWatchMovie_result')
+        if self.se is not None:
+            oprot.writeFieldBegin('se', TType.STRUCT, 1)
+            self.se.write(oprot)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -1144,6 +1035,8 @@ class UserWatchMovie_result(object):
         return not (self == other)
 all_structs.append(UserWatchMovie_result)
 UserWatchMovie_result.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'se', [ServiceException, None], None, ),  # 1
 )
 
 
@@ -1210,7 +1103,15 @@ AddUser_args.thrift_spec = (
 
 
 class AddUser_result(object):
+    """
+    Attributes:
+     - se
 
+    """
+
+
+    def __init__(self, se=None,):
+        self.se = se
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1221,6 +1122,12 @@ class AddUser_result(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.se = ServiceException()
+                    self.se.read(iprot)
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1231,6 +1138,10 @@ class AddUser_result(object):
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
         oprot.writeStructBegin('AddUser_result')
+        if self.se is not None:
+            oprot.writeFieldBegin('se', TType.STRUCT, 1)
+            self.se.write(oprot)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -1249,6 +1160,8 @@ class AddUser_result(object):
         return not (self == other)
 all_structs.append(AddUser_result)
 AddUser_result.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'se', [ServiceException, None], None, ),  # 1
 )
 
 
@@ -1318,12 +1231,14 @@ class GetUserID_result(object):
     """
     Attributes:
      - success
+     - se
 
     """
 
 
-    def __init__(self, success=None,):
+    def __init__(self, success=None, se=None,):
         self.success = success
+        self.se = se
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1335,8 +1250,14 @@ class GetUserID_result(object):
             if ftype == TType.STOP:
                 break
             if fid == 0:
-                if ftype == TType.STRING:
-                    self.success = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.I64:
+                    self.success = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.se = ServiceException()
+                    self.se.read(iprot)
                 else:
                     iprot.skip(ftype)
             else:
@@ -1350,8 +1271,12 @@ class GetUserID_result(object):
             return
         oprot.writeStructBegin('GetUserID_result')
         if self.success is not None:
-            oprot.writeFieldBegin('success', TType.STRING, 0)
-            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
+            oprot.writeFieldBegin('success', TType.I64, 0)
+            oprot.writeI64(self.success)
+            oprot.writeFieldEnd()
+        if self.se is not None:
+            oprot.writeFieldBegin('se', TType.STRUCT, 1)
+            self.se.write(oprot)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -1371,7 +1296,8 @@ class GetUserID_result(object):
         return not (self == other)
 all_structs.append(GetUserID_result)
 GetUserID_result.thrift_spec = (
-    (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
+    (0, TType.I64, 'success', None, None, ),  # 0
+    (1, TType.STRUCT, 'se', [ServiceException, None], None, ),  # 1
 )
 fix_spec(all_structs)
 del all_structs

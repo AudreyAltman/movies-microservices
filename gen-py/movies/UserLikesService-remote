@@ -24,13 +24,12 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] [-novalidate] [-ca_certs certs] [-keyfile keyfile] [-certfile certfile] function [arg1 [arg2...]]')
     print('')
     print('Functions:')
-    print('   GetMovieLikesByIds( movie_ids)')
-    print('  void UserRateMovie(string user_id, string movie_id, i64 likeDislike)')
-    print('   GetUsersLikedMovies(string user_id)')
+    print('  void UserRateMovie(i64 user_id, string movie_id, i64 likeDislike)')
+    print('   GetUsersLikedMovies(i64 user_id)')
     print('  i64 GetMovieRating(string movie_id)')
-    print('  void UserWatchMovie(string user_id, string movie_id)')
+    print('  void UserWatchMovie(i64 user_id, string movie_id)')
     print('  void AddUser(string user_name)')
-    print('  string GetUserID(string user_name)')
+    print('  i64 GetUserID(string user_name)')
     print('')
     sys.exit(0)
 
@@ -110,23 +109,17 @@ protocol = TBinaryProtocol(transport)
 client = UserLikesService.Client(protocol)
 transport.open()
 
-if cmd == 'GetMovieLikesByIds':
-    if len(args) != 1:
-        print('GetMovieLikesByIds requires 1 args')
-        sys.exit(1)
-    pp.pprint(client.GetMovieLikesByIds(eval(args[0]),))
-
-elif cmd == 'UserRateMovie':
+if cmd == 'UserRateMovie':
     if len(args) != 3:
         print('UserRateMovie requires 3 args')
         sys.exit(1)
-    pp.pprint(client.UserRateMovie(args[0], args[1], eval(args[2]),))
+    pp.pprint(client.UserRateMovie(eval(args[0]), args[1], eval(args[2]),))
 
 elif cmd == 'GetUsersLikedMovies':
     if len(args) != 1:
         print('GetUsersLikedMovies requires 1 args')
         sys.exit(1)
-    pp.pprint(client.GetUsersLikedMovies(args[0],))
+    pp.pprint(client.GetUsersLikedMovies(eval(args[0]),))
 
 elif cmd == 'GetMovieRating':
     if len(args) != 1:
@@ -138,7 +131,7 @@ elif cmd == 'UserWatchMovie':
     if len(args) != 2:
         print('UserWatchMovie requires 2 args')
         sys.exit(1)
-    pp.pprint(client.UserWatchMovie(args[0], args[1],))
+    pp.pprint(client.UserWatchMovie(eval(args[0]), args[1],))
 
 elif cmd == 'AddUser':
     if len(args) != 1:

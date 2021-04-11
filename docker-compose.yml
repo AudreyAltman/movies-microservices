@@ -23,6 +23,11 @@ services:
     hostname: recommender-mongodb
     restart: always
 
+  likes-mongodb:
+    image: mongo
+    hostname: likes-mongodb
+    restart: always
+
   movies-mongodb:
     image: mongo
     hostname: movies-mongodb

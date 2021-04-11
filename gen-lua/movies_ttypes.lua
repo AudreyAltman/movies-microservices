@@ -6,8 +6,8 @@
 --
 
 
-local Thrift = require 'Thrift'
-local __TObject = Thrift.__TObject
+local Thrift = require 'Thrift'	
+local __TObject = Thrift.__TObject	
 local TException = Thrift.TException
 
 local ErrorCode = {
@@ -63,53 +63,6 @@ function ServiceException:write(oprot)
   if self.message ~= nil then
     oprot:writeFieldBegin('message', TType.STRING, 2)
     oprot:writeString(self.message)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-location = __TObject:new{
-  location_id,
-  city
-}
-
-function location:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.I64 then
-        self.location_id = iprot:readI64()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.I64 then
-        self.city = iprot:readI64()
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function location:write(oprot)
-  oprot:writeStructBegin('location')
-  if self.location_id ~= nil then
-    oprot:writeFieldBegin('location_id', TType.I64, 1)
-    oprot:writeI64(self.location_id)
-    oprot:writeFieldEnd()
-  end
-  if self.city ~= nil then
-    oprot:writeFieldBegin('city', TType.I64, 2)
-    oprot:writeI64(self.city)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()

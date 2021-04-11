@@ -41,28 +41,30 @@ service MovieInfoService{
 }
 
 service UserLikesService{
-	list<i64> GetMovieLikesByIds(
-     1: list<string> movie_ids
-   )
    void UserRateMovie(
-     1: string user_id
+     1: i64 user_id
      2: string movie_id
      3: i64 likeDislike
-   )
+   ) throws (1: ServiceException se)
+
    list<string> GetUsersLikedMovies(
-     1: string user_id
-   )
+     1: i64 user_id
+   ) throws (1: ServiceException se)
+
    i64 GetMovieRating(
      1: string movie_id
-   )
+   ) throws (1: ServiceException se)
+
    void UserWatchMovie(
-     1: string user_id
-	 2: string movie_id
-   )
+     1: i64 user_id
+     2: string movie_id
+   ) throws (1: ServiceException se)
+
    void AddUser(
      1: string user_name
-   )
-   string GetUserID(
+   ) throws (1: ServiceException se)
+
+   i64 GetUserID(
      1: string user_name
-   )
+   ) throws (1: ServiceException se)
 }
