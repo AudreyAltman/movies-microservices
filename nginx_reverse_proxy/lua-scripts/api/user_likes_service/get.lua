@@ -22,7 +22,7 @@ function _M.Get()
 
   ngx.say("Inside Nginx Lua script: Processing Get Ratings... Request from: ", post.user_id)
 
-  local client = GenericObjectPool:connection(RecommenderServiceClient, "user-likes-service", 9094)
+  local client = GenericObjectPool:connection(UserLikesServiceClient, "user-likes-service", 9094)
   local status, ret = pcall(client.GetUsersLikedMovies, client, post.user_id)
   GenericObjectPool:returnConnection(client)
   ngx.say("Status: ", status)
