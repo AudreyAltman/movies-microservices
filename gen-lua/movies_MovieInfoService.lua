@@ -23,6 +23,14 @@ local MovieInfoServiceClient = __TObject.new(__TClient, {
   __type = 'MovieInfoServiceClient'
 })
 
+local GetMoviesByIds_args = __TObject:new{
+  movie_ids
+}
+
+local GetMoviesByTitle_args = __TObject:new{
+  movie_string
+}
+
 function MovieInfoServiceClient:GetMoviesByIds(movie_ids)
   self:send_GetMoviesByIds(movie_ids)
   return self:recv_GetMoviesByIds(movie_ids)
@@ -162,51 +170,6 @@ end
 
 -- HELPER FUNCTIONS AND STRUCTURES
 
-local GetMoviesByIds_args = __TObject:new{
-  movie_ids
-}
-
-function GetMoviesByIds_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.LIST then
-        self.movie_ids = {}
-        local _etype15, _size12 = iprot:readListBegin()
-        for _i=1,_size12 do
-          local _elem16 = iprot:readString()
-          table.insert(self.movie_ids, _elem16)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function GetMoviesByIds_args:write(oprot)
-  oprot:writeStructBegin('GetMoviesByIds_args')
-  if self.movie_ids ~= nil then
-    oprot:writeFieldBegin('movie_ids', TType.LIST, 1)
-    oprot:writeListBegin(TType.STRING, #self.movie_ids)
-    for _,iter17 in ipairs(self.movie_ids) do
-      oprot:writeString(iter17)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
  GetMoviesByIds_result = __TObject:new{
   success
 }
@@ -251,10 +214,6 @@ function GetMoviesByIds_result:write(oprot)
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
-
-local GetMoviesByTitle_args = __TObject:new{
-  movie_string
-}
 
 function GetMoviesByTitle_args:read(iprot)
   iprot:readStructBegin()
@@ -344,3 +303,5 @@ function GetMoviesByTitle_result:write(oprot)
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
+
+return MovieInfoServiceClient
