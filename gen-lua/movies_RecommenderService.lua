@@ -119,7 +119,8 @@ function RecommenderServiceProcessor:process(iprot, oprot, server_ctx)
     return false, 'Unknown function '..name	
   else	
     return self[func_name](self, seqid, iprot, oprot, server_ctx)	
-  endend
+  end
+end
 
 function RecommenderServiceProcessor:process_UploadRecommendations(seqid, iprot, oprot, server_ctx)
   local args = UploadRecommendations_args:new{}
