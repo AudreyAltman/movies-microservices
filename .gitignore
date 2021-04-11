@@ -1,1 +1,8 @@
+# IntelliJ
 .idea/*
+
+# SBT
+batch/target/*
+batch/project/boot/
+batch/project/target/*
+batch/project/project/

@@ -32,6 +32,13 @@ services:
     image: mongo
     hostname: movies-mongodb
     restart: always
+
+  user-likes-mongodb:
+    image: mongo
+    hostname: user-likes-mongodb
+    ports:
+      - 27017:27017
+    restart: always
     
   nginx-thrift:
     image: yg397/openresty-thrift:xenial
