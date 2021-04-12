@@ -23,9 +23,9 @@ services:
     hostname: recommender-mongodb
     restart: always
 
-  likes-mongodb:
+  user-likes-mongodb:
     image: mongo
-    hostname: likes-mongodb
+    hostname: user-likes-mongodb
     restart: always
 
   movies-mongodb:
