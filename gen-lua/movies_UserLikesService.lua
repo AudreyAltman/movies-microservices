@@ -6,83 +6,12 @@
 --
 
 
-local movies_ttype = require 'movies_ttypes'
-local Thrift = require 'Thrift'
-local TType = Thrift.TType
-local TMessageType = Thrift.TMessageType
-local __TObject = Thrift.__TObject
-local TApplicationException = Thrift.TApplicationException
-local __TClient = Thrift.__TClient
-local __TProcessor = Thrift.__TProcessor
-local ttype = Thrift.ttype
-local ttable_size = Thrift.ttable_size
-local TException = Thrift.TException
+require 'Thrift'
+require 'movies_ttypes'
 
-local UserLikesServiceClient = __TObject.new(__TClient, {
+UserLikesServiceClient = __TObject.new(__TClient, {
   __type = 'UserLikesServiceClient'
 })
-
-local GetMovieLikesByIds_args = __TObject:new{
-    movie_ids
-}
-
-local GetUsersLikedMovies_args = __TObject:new{
-    user_id
-}
-
-local GetUserID_args = __TObject:new{
-    user_name
-}
-
-local AddUser_args = __TObject:new{
-    user_name
-}
-
-local UserWatchMovie_args = __TObject:new{
-  user_id,
-  movie_id
-}
-
-local GetMovieRating_args = __TObject:new{
-    movie_id
-}
-
-local UserRateMovie_args = __TObject:new{
-    user_id,
-    movie_id,
-    likeDislike
-}
-
-function UserLikesServiceClient:GetMovieLikesByIds(movie_ids)
-  self:send_GetMovieLikesByIds(movie_ids)
-  return self:recv_GetMovieLikesByIds(movie_ids)
-end
-
-function UserLikesServiceClient:send_GetMovieLikesByIds(movie_ids)
-  self.oprot:writeMessageBegin('GetMovieLikesByIds', TMessageType.CALL, self._seqid)
-  local args = GetMovieLikesByIds_args:new{}
-  args.movie_ids = movie_ids
-  args:write(self.oprot)
-  self.oprot:writeMessageEnd()
-  self.oprot.trans:flush()
-end
-
-function UserLikesServiceClient:recv_GetMovieLikesByIds(movie_ids)
-  local fname, mtype, rseqid = self.iprot:readMessageBegin()
-  if mtype == TMessageType.EXCEPTION then
-    local x = TApplicationException:new{}
-    x:read(self.iprot)
-    self.iprot:readMessageEnd()
-    error(x)
-  end
-  local result = GetMovieLikesByIds_result:new{}
-  result:read(self.iprot)
-  self.iprot:readMessageEnd()
-  if result.success ~= nil then
-    return result.success
-  end
-  error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
-end
 
 function UserLikesServiceClient:UserRateMovie(user_id, movie_id, likeDislike)
   self:send_UserRateMovie(user_id, movie_id, likeDislike)
@@ -140,6 +69,8 @@ function UserLikesServiceClient:recv_GetUsersLikedMovies(user_id)
   self.iprot:readMessageEnd()
   if result.success ~= nil then
     return result.success
+  elseif result.se then
+    error(result.se)
   end
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
@@ -171,6 +102,8 @@ function UserLikesServiceClient:recv_GetMovieRating(movie_id)
   self.iprot:readMessageEnd()
   if result.success ~= nil then
     return result.success
+  elseif result.se then
+    error(result.se)
   end
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
@@ -257,15 +190,17 @@ function UserLikesServiceClient:recv_GetUserID(user_name)
   self.iprot:readMessageEnd()
   if result.success ~= nil then
     return result.success
+  elseif result.se then
+    error(result.se)
   end
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
-local UserLikesServiceIface = __TObject:new{
+UserLikesServiceIface = __TObject:new{
   __type = 'UserLikesServiceIface'
 }
 
 
-local UserLikesServiceProcessor = __TObject.new(__TProcessor
+UserLikesServiceProcessor = __TObject.new(__TProcessor
 , {
  __type = 'UserLikesServiceProcessor'
 })
@@ -274,37 +209,21 @@ function UserLikesServiceProcessor:process(iprot, oprot, server_ctx)
   local name, mtype, seqid = iprot:readMessageBegin()
   local func_name = 'process_' .. name
   if not self[func_name] or ttype(self[func_name]) ~= 'function' then
-    iprot:skip(TType.STRUCT)
-    iprot:readMessageEnd()
-    x = TApplicationException:new{
-      errorCode = TApplicationException.UNKNOWN_METHOD
-    }
-    oprot:writeMessageBegin(name, TMessageType.EXCEPTION, seqid)
-    x:write(oprot)
-    oprot:writeMessageEnd()
-    oprot.trans:flush()
+    if oprot ~= nil then
+      iprot:skip(TType.STRUCT)
+      iprot:readMessageEnd()
+      x = TApplicationException:new{
+        errorCode = TApplicationException.UNKNOWN_METHOD
+      }
+      oprot:writeMessageBegin(name, TMessageType.EXCEPTION, seqid)
+      x:write(oprot)
+      oprot:writeMessageEnd()
+      oprot.trans:flush()
+    end
+    return false, 'Unknown function '..name
   else
-    self[func_name](self, seqid, iprot, oprot, server_ctx)
+    return self[func_name](self, seqid, iprot, oprot, server_ctx)
   end
-end
-
-function UserLikesServiceProcessor:process_GetMovieLikesByIds(seqid, iprot, oprot, server_ctx)
-  local args = GetMovieLikesByIds_args:new{}
-  local reply_type = TMessageType.REPLY
-  args:read(iprot)
-  iprot:readMessageEnd()
-  local result = GetMovieLikesByIds_result:new{}
-  local status, res = pcall(self.handler.GetMovieLikesByIds, self.handler, args.movie_ids)
-  if not status then
-    reply_type = TMessageType.EXCEPTION
-    result = TApplicationException:new{message = res}
-  else
-    result.success = res
-  end
-  oprot:writeMessageBegin('GetMovieLikesByIds', reply_type, seqid)
-  result:write(oprot)
-  oprot:writeMessageEnd()
-  oprot.trans:flush()
 end
 
 function UserLikesServiceProcessor:process_UserRateMovie(seqid, iprot, oprot, server_ctx)
@@ -317,6 +236,8 @@ function UserLikesServiceProcessor:process_UserRateMovie(seqid, iprot, oprot, se
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
+  elseif ttype(res) == 'ServiceException' then
+    result.se = res
   else
     result.success = res
   end
@@ -324,6 +245,7 @@ function UserLikesServiceProcessor:process_UserRateMovie(seqid, iprot, oprot, se
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
+  return status, res
 end
 
 function UserLikesServiceProcessor:process_GetUsersLikedMovies(seqid, iprot, oprot, server_ctx)
@@ -336,6 +258,8 @@ function UserLikesServiceProcessor:process_GetUsersLikedMovies(seqid, iprot, opr
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
+  elseif ttype(res) == 'ServiceException' then
+    result.se = res
   else
     result.success = res
   end
@@ -343,6 +267,7 @@ function UserLikesServiceProcessor:process_GetUsersLikedMovies(seqid, iprot, opr
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
+  return status, res
 end
 
 function UserLikesServiceProcessor:process_GetMovieRating(seqid, iprot, oprot, server_ctx)
@@ -355,6 +280,8 @@ function UserLikesServiceProcessor:process_GetMovieRating(seqid, iprot, oprot, s
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
+  elseif ttype(res) == 'ServiceException' then
+    result.se = res
   else
     result.success = res
   end
@@ -362,6 +289,7 @@ function UserLikesServiceProcessor:process_GetMovieRating(seqid, iprot, oprot, s
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
+  return status, res
 end
 
 function UserLikesServiceProcessor:process_UserWatchMovie(seqid, iprot, oprot, server_ctx)
@@ -374,6 +302,8 @@ function UserLikesServiceProcessor:process_UserWatchMovie(seqid, iprot, oprot, s
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
+  elseif ttype(res) == 'ServiceException' then
+    result.se = res
   else
     result.success = res
   end
@@ -381,6 +311,7 @@ function UserLikesServiceProcessor:process_UserWatchMovie(seqid, iprot, oprot, s
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
+  return status, res
 end
 
 function UserLikesServiceProcessor:process_AddUser(seqid, iprot, oprot, server_ctx)
@@ -393,6 +324,8 @@ function UserLikesServiceProcessor:process_AddUser(seqid, iprot, oprot, server_c
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
+  elseif ttype(res) == 'ServiceException' then
+    result.se = res
   else
     result.success = res
   end
@@ -400,6 +333,7 @@ function UserLikesServiceProcessor:process_AddUser(seqid, iprot, oprot, server_c
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
+  return status, res
 end
 
 function UserLikesServiceProcessor:process_GetUserID(seqid, iprot, oprot, server_ctx)
@@ -412,6 +346,8 @@ function UserLikesServiceProcessor:process_GetUserID(seqid, iprot, oprot, server
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
+  elseif ttype(res) == 'ServiceException' then
+    result.se = res
   else
     result.success = res
   end
@@ -419,95 +355,16 @@ function UserLikesServiceProcessor:process_GetUserID(seqid, iprot, oprot, server
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
+  return status, res
 end
 
 -- HELPER FUNCTIONS AND STRUCTURES
 
-function GetMovieLikesByIds_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.LIST then
-        self.movie_ids = {}
-        local _etype21, _size18 = iprot:readListBegin()
-        for _i=1,_size18 do
-          local _elem22 = iprot:readString()
-          table.insert(self.movie_ids, _elem22)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function GetMovieLikesByIds_args:write(oprot)
-  oprot:writeStructBegin('GetMovieLikesByIds_args')
-  if self.movie_ids ~= nil then
-    oprot:writeFieldBegin('movie_ids', TType.LIST, 1)
-    oprot:writeListBegin(TType.STRING, #self.movie_ids)
-    for _,iter23 in ipairs(self.movie_ids) do
-      oprot:writeString(iter23)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-GetMovieLikesByIds_result = __TObject:new{
-  success
+UserRateMovie_args = __TObject:new{
+  user_id,
+  movie_id,
+  likeDislike
 }
-
-function GetMovieLikesByIds_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.LIST then
-        self.success = {}
-        local _etype27, _size24 = iprot:readListBegin()
-        for _i=1,_size24 do
-          local _elem28 = iprot:readI64()
-          table.insert(self.success, _elem28)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function GetMovieLikesByIds_result:write(oprot)
-  oprot:writeStructBegin('GetMovieLikesByIds_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.LIST, 0)
-    oprot:writeListBegin(TType.I64, #self.success)
-    for _,iter29 in ipairs(self.success) do
-      oprot:writeI64(iter29)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
 
 function UserRateMovie_args:read(iprot)
   iprot:readStructBegin()
@@ -516,8 +373,8 @@ function UserRateMovie_args:read(iprot)
     if ftype == TType.STOP then
       break
     elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.user_id = iprot:readString()
+      if ftype == TType.I64 then
+        self.user_id = iprot:readI64()
       else
         iprot:skip(ftype)
       end
@@ -544,8 +401,8 @@ end
 function UserRateMovie_args:write(oprot)
   oprot:writeStructBegin('UserRateMovie_args')
   if self.user_id ~= nil then
-    oprot:writeFieldBegin('user_id', TType.STRING, 1)
-    oprot:writeString(self.user_id)
+    oprot:writeFieldBegin('user_id', TType.I64, 1)
+    oprot:writeI64(self.user_id)
     oprot:writeFieldEnd()
   end
   if self.movie_id ~= nil then
@@ -563,7 +420,7 @@ function UserRateMovie_args:write(oprot)
 end
 
 UserRateMovie_result = __TObject:new{
-
+  se
 }
 
 function UserRateMovie_result:read(iprot)
@@ -572,6 +429,13 @@ function UserRateMovie_result:read(iprot)
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.se = ServiceException:new{}
+        self.se:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
     else
       iprot:skip(ftype)
     end
@@ -582,9 +446,18 @@ end
 
 function UserRateMovie_result:write(oprot)
   oprot:writeStructBegin('UserRateMovie_result')
+  if self.se ~= nil then
+    oprot:writeFieldBegin('se', TType.STRUCT, 1)
+    self.se:write(oprot)
+    oprot:writeFieldEnd()
+  end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
+
+GetUsersLikedMovies_args = __TObject:new{
+  user_id
+}
 
 function GetUsersLikedMovies_args:read(iprot)
   iprot:readStructBegin()
@@ -593,8 +466,8 @@ function GetUsersLikedMovies_args:read(iprot)
     if ftype == TType.STOP then
       break
     elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.user_id = iprot:readString()
+      if ftype == TType.I64 then
+        self.user_id = iprot:readI64()
       else
         iprot:skip(ftype)
       end
@@ -609,8 +482,8 @@ end
 function GetUsersLikedMovies_args:write(oprot)
   oprot:writeStructBegin('GetUsersLikedMovies_args')
   if self.user_id ~= nil then
-    oprot:writeFieldBegin('user_id', TType.STRING, 1)
-    oprot:writeString(self.user_id)
+    oprot:writeFieldBegin('user_id', TType.I64, 1)
+    oprot:writeI64(self.user_id)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
@@ -618,7 +491,8 @@ function GetUsersLikedMovies_args:write(oprot)
 end
 
 GetUsersLikedMovies_result = __TObject:new{
-  success
+  success,
+  se
 }
 
 function GetUsersLikedMovies_result:read(iprot)
@@ -636,6 +510,13 @@ function GetUsersLikedMovies_result:read(iprot)
           table.insert(self.success, _elem34)
         end
         iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.se = ServiceException:new{}
+        self.se:read(iprot)
       else
         iprot:skip(ftype)
       end
@@ -658,9 +539,18 @@ function GetUsersLikedMovies_result:write(oprot)
     oprot:writeListEnd()
     oprot:writeFieldEnd()
   end
+  if self.se ~= nil then
+    oprot:writeFieldBegin('se', TType.STRUCT, 1)
+    self.se:write(oprot)
+    oprot:writeFieldEnd()
+  end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
+
+GetMovieRating_args = __TObject:new{
+  movie_id
+}
 
 function GetMovieRating_args:read(iprot)
   iprot:readStructBegin()
@@ -694,7 +584,8 @@ function GetMovieRating_args:write(oprot)
 end
 
 GetMovieRating_result = __TObject:new{
-  success
+  success,
+  se
 }
 
 function GetMovieRating_result:read(iprot)
@@ -706,6 +597,13 @@ function GetMovieRating_result:read(iprot)
     elseif fid == 0 then
       if ftype == TType.I64 then
         self.success = iprot:readI64()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.se = ServiceException:new{}
+        self.se:read(iprot)
       else
         iprot:skip(ftype)
       end
@@ -724,9 +622,19 @@ function GetMovieRating_result:write(oprot)
     oprot:writeI64(self.success)
     oprot:writeFieldEnd()
   end
+  if self.se ~= nil then
+    oprot:writeFieldBegin('se', TType.STRUCT, 1)
+    self.se:write(oprot)
+    oprot:writeFieldEnd()
+  end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
+
+UserWatchMovie_args = __TObject:new{
+  user_id,
+  movie_id
+}
 
 function UserWatchMovie_args:read(iprot)
   iprot:readStructBegin()
@@ -735,8 +643,8 @@ function UserWatchMovie_args:read(iprot)
     if ftype == TType.STOP then
       break
     elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.user_id = iprot:readString()
+      if ftype == TType.I64 then
+        self.user_id = iprot:readI64()
       else
         iprot:skip(ftype)
       end
@@ -757,8 +665,8 @@ end
 function UserWatchMovie_args:write(oprot)
   oprot:writeStructBegin('UserWatchMovie_args')
   if self.user_id ~= nil then
-    oprot:writeFieldBegin('user_id', TType.STRING, 1)
-    oprot:writeString(self.user_id)
+    oprot:writeFieldBegin('user_id', TType.I64, 1)
+    oprot:writeI64(self.user_id)
     oprot:writeFieldEnd()
   end
   if self.movie_id ~= nil then
@@ -771,7 +679,7 @@ function UserWatchMovie_args:write(oprot)
 end
 
 UserWatchMovie_result = __TObject:new{
-
+  se
 }
 
 function UserWatchMovie_result:read(iprot)
@@ -780,6 +688,13 @@ function UserWatchMovie_result:read(iprot)
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.se = ServiceException:new{}
+        self.se:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
     else
       iprot:skip(ftype)
     end
@@ -790,9 +705,18 @@ end
 
 function UserWatchMovie_result:write(oprot)
   oprot:writeStructBegin('UserWatchMovie_result')
+  if self.se ~= nil then
+    oprot:writeFieldBegin('se', TType.STRUCT, 1)
+    self.se:write(oprot)
+    oprot:writeFieldEnd()
+  end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
+
+AddUser_args = __TObject:new{
+  user_name
+}
 
 function AddUser_args:read(iprot)
   iprot:readStructBegin()
@@ -826,7 +750,7 @@ function AddUser_args:write(oprot)
 end
 
 AddUser_result = __TObject:new{
-
+  se
 }
 
 function AddUser_result:read(iprot)
@@ -835,6 +759,13 @@ function AddUser_result:read(iprot)
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.se = ServiceException:new{}
+        self.se:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
     else
       iprot:skip(ftype)
     end
@@ -845,9 +776,18 @@ end
 
 function AddUser_result:write(oprot)
   oprot:writeStructBegin('AddUser_result')
+  if self.se ~= nil then
+    oprot:writeFieldBegin('se', TType.STRUCT, 1)
+    self.se:write(oprot)
+    oprot:writeFieldEnd()
+  end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
+
+GetUserID_args = __TObject:new{
+  user_name
+}
 
 function GetUserID_args:read(iprot)
   iprot:readStructBegin()
@@ -881,7 +821,8 @@ function GetUserID_args:write(oprot)
 end
 
 GetUserID_result = __TObject:new{
-  success
+  success,
+  se
 }
 
 function GetUserID_result:read(iprot)
@@ -891,8 +832,15 @@ function GetUserID_result:read(iprot)
     if ftype == TType.STOP then
       break
     elseif fid == 0 then
-      if ftype == TType.STRING then
-        self.success = iprot:readString()
+      if ftype == TType.I64 then
+        self.success = iprot:readI64()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.se = ServiceException:new{}
+        self.se:read(iprot)
       else
         iprot:skip(ftype)
       end
@@ -907,12 +855,15 @@ end
 function GetUserID_result:write(oprot)
   oprot:writeStructBegin('GetUserID_result')
   if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.STRING, 0)
-    oprot:writeString(self.success)
+    oprot:writeFieldBegin('success', TType.I64, 0)
+    oprot:writeI64(self.success)
+    oprot:writeFieldEnd()
+  end
+  if self.se ~= nil then
+    oprot:writeFieldBegin('se', TType.STRUCT, 1)
+    self.se:write(oprot)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
-
-return UserLikesServiceClient
