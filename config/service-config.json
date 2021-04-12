@@ -15,8 +15,8 @@
     "addr": "recommender-mongodb",
     "port": 27017
   },
-  "likes-mongodb": {
-    "addr": "likes-mongodb",
+  "user-likes-mongodb": {
+    "addr": "user-likes-mongodb",
     "port": 27017
   },
   "movies-mongodb": {

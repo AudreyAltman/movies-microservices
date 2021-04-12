@@ -6,8 +6,8 @@
 --
 
 
-local Thrift = require 'Thrift'	
-local __TObject = Thrift.__TObject	
+local Thrift = require 'Thrift'
+local __TObject = Thrift.__TObject
 local TException = Thrift.TException
 
 local ErrorCode = {
