@@ -53,6 +53,7 @@ int main(int argc, char **argv) {
         LOG(fatal) << "Failed to pop mongoc client";
         return EXIT_FAILURE;
       }
+
       bool r = false;
       while (!r) {
         r = CreateIndex(mongodb_client, "user-likes", "user_id", true);
@@ -61,6 +62,26 @@ int main(int argc, char **argv) {
           sleep(1);
         }
       }
+
+      r = false;
+      while (!r) {
+        r = CreateIndex(mongodb_client, "user-likes", "movie_id", true);
+        if (!r) {
+          LOG(error) << "Failed to create mongodb index for movie-likes db, try again";
+          sleep(1);
+        }
+      }
+
+      // Note from Audrey - this isn't causing any terminal errors, but I'm not sure it's creating an index.
+      r = false;
+      while (!r) {
+        r = CreateIndex(mongodb_client, "users", "user_id", true);
+        if (!r) {
+          LOG(error) << "Failed to create mongodb index for users db, try again";
+          sleep(1);
+        }
+      }
+
       mongoc_client_pool_push(mongodb_client_pool, mongodb_client);
 
   // 4: configure this server

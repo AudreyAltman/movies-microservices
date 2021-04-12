@@ -41,6 +41,8 @@ UserLikesServiceHandler::UserLikesServiceHandler(
 }
 
 // Remote Procedure "UserRateMovie"
+// NOTE: Audrey simplified this in order to get it working with the nginx endpoint and validate it against the batch job.
+//       Nicole can add complexity back in once the batch job is confirmed to work.
 void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike) {
 	// TO DO: update database with user like or dislike (false == dislike, true == like)
 
