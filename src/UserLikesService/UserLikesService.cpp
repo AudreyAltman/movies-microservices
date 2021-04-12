@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
   // 3: get my port
   int my_port = config_json["user-likes-service"]["port"];
 
-  // Get mongodb client pool
+  // 4: Get mongodb client pool
     mongoc_client_pool_t* mongodb_client_pool =
        init_mongodb_client_pool(config_json, "user-likes", 128);
 
@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
 
       mongoc_client_pool_push(mongodb_client_pool, mongodb_client);
 
-  // 4: configure this server
+  // 5: configure this server
   TThreadedServer server(
       std::make_shared<UserLikesServiceProcessor>(
           std::make_shared<UserLikesServiceHandler>(
@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
       std::make_shared<TBinaryProtocolFactory>()
   );
 
-  // 5: start the server
+  // 6: start the server
   std::cout << "Starting the user likes server ..." << std::endl;
   server.serve();
   return 0;
