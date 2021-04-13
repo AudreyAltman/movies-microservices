@@ -22,9 +22,5 @@
   "movies-mongodb": {
     "addr": "movies-mongodb",
     "port": 27017
-  },
-  "user-likes-mongodb": {
-    "addr": "user-likes-mongodb",
-    "port": 27017
   }
 }
