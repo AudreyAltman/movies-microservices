@@ -54,4 +54,12 @@ $ docker-compose up
 2. Stop docker containers that started from docker-compose script:
 $ docker-compose down
 
-Nicole test push
+Build and run commands:
+1. sudo docker build -t audreyaltman/movies-project .
+2. sudo docker push audreyaltman/movies-project:latest
+3. sudo docker-compose up
+4. sudo docker-compose down
+Cleanup:
+Remove exited docker images: sudo docker rm $(sudo docker ps --filter status=exited -q)
+Force kill any containers which won't exit due to memory issues: sudo docker kill $(sudo docker ps -q)
+Cleanup local docker: sudo docker volume prune
