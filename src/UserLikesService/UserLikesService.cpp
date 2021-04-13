@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 
       bool r = false;
       while (!r) {
-        r = CreateIndex(mongodb_client, "user-likes", "user_id", true);
+        r = CreateIndex(mongodb_client, "user-likes", "user_id", false);
         if (!r) {
           LOG(error) << "Failed to create mongodb index, try again";
           sleep(1);
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
 
       r = false;
       while (!r) {
-        r = CreateIndex(mongodb_client, "user-likes", "movie_id", true);
+        r = CreateIndex(mongodb_client, "movie-likes", "movie_id", true);
         if (!r) {
           LOG(error) << "Failed to create mongodb index for movie-likes db, try again";
           sleep(1);
