@@ -21,6 +21,8 @@ services:
   recommender-mongodb:
     image: mongo
     hostname: recommender-mongodb
+    ports:
+      - 27018:27017
     restart: always
 
   user-likes-mongodb:
