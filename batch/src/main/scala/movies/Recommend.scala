@@ -50,6 +50,7 @@ object Recommend {
 //      .toDF("user_id", "movie_id", "rating")
 //      .withColumn("movie_num", hashMovieId(col("movie_id")))
 
+    // Format data for ALS operation
     val docDF = documents.mapValues{v => (v.get("user_id"), v.get("movie_id"), v.get("rating"), v.get("_id"))}
       .map{ case(k,v) => (v._1.toString, v._2.toString, v._3.toString, k.toString)}
       .map(s => (s._1.toInt, s._2, s._3.toFloat, s._4))
@@ -113,8 +114,8 @@ object Recommend {
       }
 
       new MongoUpdateWritable(
-        new BasicDBObject("_id", row._3),  // Query
-        new BasicDBObject("movie_ids", blist),  // Update operation
+        new BasicDBObject("user_id", row._1),  // Query
+        new BasicDBObject("user_id", row._1).append("movie_ids", blist),  // Update operation
         true,  // Upsert
         false, // Update multiple documents
         true   // Replace
@@ -131,14 +132,5 @@ object Recommend {
       outputConfig)
 
 
-//
-//    // Save this RDD as a Hadoop "file".
-//    // The path argument is unused; all documents will go to "mongo.output.uri".
-//    documents.saveAsNewAPIHadoopFile(
-//      "file:///this-is-completely-unused",
-//      classOf[Object],
-//      classOf[BSONObject],
-//      classOf[MongoOutputFormat[Object, BSONObject]],
-//      outputConfig)
   }
 }
