@@ -8,7 +8,7 @@ RUN apt-get autoclean;
 
 # Install Java
 RUN apt-get update && \
-    apt-get install -y default-jdk && \
+    apt-get install -y openjdk-8-jdk && \
     apt-get clean;
 
 # Install Scala
