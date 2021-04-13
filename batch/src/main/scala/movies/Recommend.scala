@@ -109,8 +109,8 @@ object Recommend {
     val updates = outputRDD.mapValues(row => {
       var blist = new BasicDBList()
 
-      for ((m,i) <- row._2.zipWithIndex) {
-        blist.add(m)
+      for (movie_id <- row._2) {
+        blist.add(movie_id)
       }
 
       new MongoUpdateWritable(

@@ -57,7 +57,7 @@ do
   rem=$(($i % 2))
   if [ "$rem" -ne "0" ]; then
     r=$((1 + $RANDOM % 4))
-    curl -d "user_id="$i"&movie_id=hhh&rating="$r localhost:8080/user_rating/upload
+    curl -d "user_id="$i"&movie_id=jjj&rating="$r localhost:8080/user_rating/upload
   fi
 done
 
@@ -66,6 +66,24 @@ do
   rem=$(($i % 2))
   if [ "$rem" -eq "0" ]; then
     r=$((1 + $RANDOM % 4))
-    curl -d "user_id="$i"&movie_id=hhh&rating="$r localhost:8080/user_rating/upload
+    curl -d "user_id="$i"&movie_id=kkk&rating="$r localhost:8080/user_rating/upload
+  fi
+done
+
+for i in {1..21}
+do
+  rem=$(($i % 3))
+  if [ "$rem" -ne "0" ]; then
+    r=$((1 + $RANDOM % 4))
+    curl -d "user_id="$i"&movie_id=lll&rating="$r localhost:8080/user_rating/upload
+  fi
+done
+
+for i in {1..21}
+do
+  rem=$(($i % 3))
+  if [ "$rem" -eq "0" ]; then
+    r=$((1 + $RANDOM % 4))
+    curl -d "user_id="$i"&movie_id=mmm&rating="$r localhost:8080/user_rating/upload
   fi
 done
