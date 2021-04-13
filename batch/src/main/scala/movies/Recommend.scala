@@ -4,8 +4,10 @@
 
 package movies
 
-import org.apache.spark.{SparkContext, SparkConf}
+//import org.apache.spark.{SparkContext, SparkConf}
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
 
 import org.apache.hadoop.conf.Configuration
 
@@ -21,8 +23,11 @@ import org.apache.spark.ml.recommendation.ALS
 object Recommend {
   def main(args: Array[String]): Unit = {
 
-    val sparkConf = new SparkConf()
-    val sc = new SparkContext("local", "MoviesBatchJob", sparkConf)
+//    val sparkConf = new SparkConf()
+//    val sc = new SparkContext("local", "MoviesBatchJob", sparkConf)
+    val spark = SparkSession.builder.appName("MoviesBatchJob").master("local").getOrCreate()
+    val sc = spark.sparkContext
+    import spark.implicits._
 
     // Set up the configuration for reading from MongoDB.
     val mongoConfig = new Configuration()
