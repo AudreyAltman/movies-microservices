@@ -110,7 +110,7 @@ object Recommend {
       var blist = new BasicDBList()
 
       for ((m,i) <- row._2.zipWithIndex) {
-        blist.add(new BasicDBObject(m,i))
+        blist.add(m)
       }
 
       new MongoUpdateWritable(
