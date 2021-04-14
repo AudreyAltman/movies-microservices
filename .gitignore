@@ -4,7 +4,14 @@
 # SBT
 batch/target/*
 batch/project/boot/
-batch/project/target/*
+batch/project/target/bg-jobs/
+batch/project/target/global-logging/
+batch/project/target/streams/
+batch/project/target/task-temp-directory/
+batch/project/target/scala-2.11/classes/
+batch/project/target/scala-2.11/update/
+batch/project/target/scala-2.11/zinc/
+batch/project/target/
 batch/project/project/
 
 .DS_Store
