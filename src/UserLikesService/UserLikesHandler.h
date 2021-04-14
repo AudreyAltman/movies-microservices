@@ -41,74 +41,250 @@ UserLikesServiceHandler::UserLikesServiceHandler(
 }
 
 // Remote Procedure "UserRateMovie"
-// NOTE: Audrey simplified this in order to get it working with the nginx endpoint and validate it against the batch job.
-//       Nicole can add complexity back in once the batch job is confirmed to work.
 void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::string& movie_id, const int64_t likeDislike) {
-	// TO DO: update database with user like or dislike (false == dislike, true == like)
+if (user_id == 1 || user_id == -1) {
+		// Get mongo client
+		mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
+		if (!mongodb_client) {
+		  ServiceException se;
+		  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+		  se.message = "Failed to pop a client from MongoDB pool";
+		  throw se;
+		}
 
-  // Get mongo client
-    mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
+		// Get mongo collection
+		auto collection_users = mongoc_client_get_collection(mongodb_client, "likes", "user-likes");
+		if (!collection_users) {
+		  ServiceException se;
+		  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+		  se.message = "Failed to create collection user from DB likes";
+		  mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+		  throw se;
+		}
+		
+		// Only bother updating movies record if rating has changed
+		int64_t current_rating = 0;
+		std::cout << "check 1\n";
 
-    if (!mongodb_client) {
-      ServiceException se;
-      se.errorCode = ErrorCode::SE_MONGODB_ERROR;
-      se.message = "Failed to pop a client from MongoDB pool";
-      throw se;
-    }
-
-    // Get mongo collection
-    auto collection = mongoc_client_get_collection(
-        mongodb_client, "user-likes", "user-likes");
-
-    if (!collection) {
-      ServiceException se;
-      se.errorCode = ErrorCode::SE_MONGODB_ERROR;
-      se.message = "Failed to create collection user from DB recommender";
-      mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-      throw se;
-    }
-
-    // TODO: Check if the rating for this user and movie already exist in the database
-    //  If it does exists, set found to true
-    bool found = false;
-
-   if (found) {
-      ServiceException se;
-      se.errorCode = ErrorCode::SE_THRIFT_HANDLER_ERROR;
-      se.message = ""; // TODO
-//          mongoc_cursor_destroy(cursor);
-      mongoc_collection_destroy(collection);
-      mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-      throw se;
-   } else {
-      bson_t *new_doc = bson_new();
-      BSON_APPEND_INT64(new_doc, "user_id", user_id);
-      BSON_APPEND_UTF8(new_doc, "movie_id", movie_id.c_str());
-      BSON_APPEND_INT64(new_doc, "rating", likeDislike);
-
-      bson_error_t error;
-      bool plotinsert = mongoc_collection_insert_one (collection, new_doc, nullptr, nullptr, &error);
-
-      if (!plotinsert) {
-         LOG(error) << "Failed to insert rating for " << user_id << " to MongoDB: " << error.message;
-         ServiceException se;
-         se.errorCode = ErrorCode::SE_MONGODB_ERROR;
-         se.message = error.message;
-         bson_destroy(new_doc);
-//             mongoc_cursor_destroy(cursor);
-         mongoc_collection_destroy(collection);
-         mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-         throw se;
-      }
-      bson_destroy(new_doc);
-   }
-
-    // Cleanup mongo
-//        bson_destroy(query);
-//        mongoc_cursor_destroy(cursor);
-    mongoc_collection_destroy(collection);
-    mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-    mongoc_cleanup ();
+		// Check if record exists already for user and movie
+		bson_t *query_user = bson_new();
+		BSON_APPEND_INT64(query_user, "user_id", user_id);
+		BSON_APPEND_UTF8(query_user, "movie_id", movie_id.c_str());
+		mongoc_cursor_t *cursor_user = mongoc_collection_find_with_opts(collection_users, query_user, nullptr, nullptr);
+		
+		const bson_t *doc_user;
+		bool found_user_movie = mongoc_cursor_next(cursor_user, &doc_user);
+		std::cout << "check 2\n";
+		if (found_user_movie) {
+			// Check to see if user has rated movie
+			auto user_movies_json_char = bson_as_json(doc_user, nullptr);
+			json user_movies_json = json::parse(user_movies_json_char);
+			std::cout << "check 3\n";
+			// Get current rating
+			current_rating = user_movies_json["rating"].json::get<int>();
+			// If user rating is not set appropriately,
+			// Update current rating to new rating in user likes
+			if (current_rating != likeDislike) {
+				bson_t *update_user = bson_new();
+				BSON_APPEND_INT64(update_user, "user_id", user_id);
+				BSON_APPEND_UTF8(update_user, "movie_id", movie_id.c_str());
+				BSON_APPEND_INT64(update_user, "rating", likeDislike);				
+				bson_error_t error;
+				std::cout << "check 4\n";
+				bool updateUser = mongoc_collection_replace_one(collection_users, doc_user, update_user, nullptr, nullptr, &error);	
+				
+				if (!updateUser) {
+					std::cout << "check 5\n";
+					LOG(error) << "Failed to update user-likes record for user "
+						<< std::to_string(user_id) << " movie " << movie_id << " to MongoDB: " << error.message;
+					ServiceException se;
+					se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+					se.message = error.message;
+					// Cleanup mongo
+					bson_destroy(update_user);
+					bson_destroy(query_user);
+					mongoc_cursor_destroy(cursor_user);
+					mongoc_collection_destroy(collection_users);
+					mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+					throw se;
+				}
+				bson_destroy(update_user);
+			}
+			
+		} else {
+			std::cout << "check 6\n";
+			// Add record with user id, movie id, and rating
+			bson_t *add_user = bson_new();
+			BSON_APPEND_INT64(add_user, "user_id", user_id);
+			BSON_APPEND_UTF8(add_user, "movie_id", movie_id.c_str());
+			BSON_APPEND_INT64(add_user, "rating", likeDislike);				
+			bson_error_t error;
+			
+			bool addUser = mongoc_collection_insert_one(collection_users, add_user, nullptr, nullptr, &error);	
+			
+			if (!addUser) {
+				std::cout << "check 7\n";
+				LOG(error) << "Failed to add user-likes record for user "
+					<< std::to_string(user_id) << " movie " << movie_id << " to MongoDB: " << error.message;
+				ServiceException se;
+				se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+				se.message = error.message;
+				// Cleanup mongo
+				bson_destroy(add_user);
+				bson_destroy(query_user);
+				mongoc_cursor_destroy(cursor_user);
+				mongoc_collection_destroy(collection_users);
+				mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+				throw se;
+			}
+			bson_destroy(add_user);
+		}
+		
+		// Cleanup mongo from users
+		bson_destroy(query_user);
+		mongoc_cursor_destroy(cursor_user);
+		mongoc_collection_destroy(collection_users);
+		std::cout << "check 8\n";
+		// Update movie record if needed
+		if (current_rating != likeDislike) {
+			std::cout << "check 9\n";
+			// Get mongo collection
+			auto collection_movies = mongoc_client_get_collection(mongodb_client, "likes", "movie-likes");
+			if (!collection_movies) {
+				std::cout << "check 10\n";
+				ServiceException se;
+				se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+				se.message = "Failed to create collection user from DB likes";
+				mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+			  throw se;
+			}
+			
+			// Check if movie likes record exists
+			bson_t *query_movie = bson_new();
+			BSON_APPEND_UTF8(query_movie, "movie_id", movie_id.c_str());
+			mongoc_cursor_t *cursor_movie = mongoc_collection_find_with_opts(collection_movies, query_movie, nullptr, nullptr);
+			
+			const bson_t *doc_movie;
+			bool found_movie = mongoc_cursor_next(cursor_movie, &doc_movie);
+			std::cout << "check 11\n";
+			if (found_movie) {
+				std::cout << "check 12\n";
+				auto movie_json_char = bson_as_json(doc_movie, nullptr);
+				json movie_json = json::parse(movie_json_char);
+				
+				// Update movie ratings
+				bson_t *update_movie = bson_new();
+				BSON_APPEND_UTF8(update_movie, "movie_id", movie_id.c_str());
+				// Check if user rating existed
+				if (current_rating == 0) {
+std::cout << "check 12a\n";
+					// If user liked, add to likes column
+					if (likeDislike == 1) {
+std::cout << "check 12ab\n";
+						int64_t upd_likes = movie_json["likes"].json::get<int>() + 1;
+						BSON_APPEND_INT64(update_movie, "likes", upd_likes);
+					} 
+					// Else add to dislikes column
+					else {
+std::cout << "check 12ac\n";
+						int64_t upd_dislikes = movie_json["dislikes"].json::get<int>() + 1;
+						BSON_APPEND_INT64(update_movie, "dislikes", upd_dislikes);
+					}
+				} else {
+std::cout << "check 12ad\n";
+					// Update both movie rating columns if rating changed
+					// If user liked, add to likes column and subtract from dislikes column
+					if (likeDislike == 1) {
+std::cout << "check 12ae\n";
+						int64_t upd_likes = movie_json["likes"].json::get<int>() + 1;
+						int64_t upd_dislikes = movie_json["dislikes"].json::get<int>() - 1;
+						BSON_APPEND_INT64(update_movie, "likes", upd_likes);
+						BSON_APPEND_INT64(update_movie, "dislikes", upd_dislikes);
+					} 
+					// Else add to dislikes column and subtract from likes column
+					else {
+std::cout << "check 12af\n";
+						int64_t upd_likes = movie_json["likes"].json::get<int>() - 1;
+						int64_t upd_dislikes = movie_json["dislikes"].json::get<int>() + 1;
+						BSON_APPEND_INT64(update_movie, "likes", upd_likes);
+						BSON_APPEND_INT64(update_movie, "dislikes", upd_dislikes);
+					}
+				}
+				bson_error_t error;
+				std::cout << "check 13\n";
+				bool updateMovie = mongoc_collection_replace_one(collection_movies, doc_movie, update_movie, nullptr, nullptr, &error);	
+				
+				if (!updateMovie) {
+					std::cout << "check 14\n";
+					LOG(error) << "Failed to update movie-likes record " << movie_id << " to MongoDB: " << error.message;
+					ServiceException se;
+					se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+					se.message = error.message;
+					// Cleanup mongo
+					bson_destroy(update_movie);
+					bson_destroy(query_movie);
+					mongoc_cursor_destroy(cursor_movie);
+					mongoc_collection_destroy(collection_movies);
+					mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+					throw se;
+				}
+				bson_destroy(update_movie);
+				
+			} else {
+std::cout << "check 15\n";
+				// Add movie rating
+				bson_t *add_movie = bson_new();
+				BSON_APPEND_UTF8(add_movie, "movie_id", movie_id.c_str());
+				if (likeDislike == 1) {
+std::cout << "check 15a\n";
+					BSON_APPEND_INT64(add_movie, "likes", 1);
+					BSON_APPEND_INT64(add_movie, "dislikes", 0);
+				} else {
+std::cout << "check 15ab\n";
+					BSON_APPEND_INT64(add_movie, "likes", 0);
+					BSON_APPEND_INT64(add_movie, "dislikes", 1);
+				}
+				
+				bson_error_t error;
+				bool addMovie = mongoc_collection_insert_one(collection_movies, add_movie, nullptr, nullptr, &error);
+				std::cout << "check 16\n";
+				if (!addMovie) {
+std::cout << "check 17\n";
+					LOG(error) << "Failed to add movie-likes record " << movie_id << " to MongoDB: " << error.message;
+					ServiceException se;
+					se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+					se.message = error.message;
+					// Cleanup mongo
+					bson_destroy(add_movie);
+					bson_destroy(query_movie);
+					mongoc_cursor_destroy(cursor_movie);
+					mongoc_collection_destroy(collection_movies);
+					mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+					throw se;
+				}
+				
+				bson_destroy(add_movie);
+			}
+			std::cout << "check 18\n";
+			// Cleanup mongo
+			bson_destroy(query_movie);
+			mongoc_cursor_destroy(cursor_movie);
+			mongoc_collection_destroy(collection_movies);
+		}
+		std::cout << "check 19\n";
+		// Cleanup mongo
+		mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+		mongoc_cleanup();
+	}
+	else {
+std::cout << "check 20\n";
+		ServiceException se;
+		se.errorCode = ErrorCode::SE_THRIFT_HANDLER_ERROR;
+		se.message = "Invalid likeDislike input in function call to UserRateMovie.";
+		throw se;
+	}
+std::cout << "check 21\n";
+	return;
 }
 
 // Remote Procedure "GetUsersLikedMovies"
