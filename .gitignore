@@ -2,17 +2,16 @@
 .idea/*
 
 # SBT
-batch/target/*
 batch/project/boot/
 batch/project/target/bg-jobs/
-batch/project/target/global-logging/
-batch/project/target/streams/
-batch/project/target/task-temp-directory/
-batch/project/target/scala-2.11/classes/
-batch/project/target/scala-2.11/update/
-batch/project/target/scala-2.11/zinc/
 batch/project/target/
 batch/project/project/
+batch/target/global-logging/
+batch/target/streams/
+batch/target/task-temp-directory/
+batch/target/scala-2.11/classes/
+batch/target/scala-2.11/update/
+batch/target/scala-2.11/zinc/
 
 .DS_Store
 derby.log
