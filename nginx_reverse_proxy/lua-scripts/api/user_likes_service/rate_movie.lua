@@ -13,7 +13,7 @@ function _M.Rate_Movie()
   ngx.req.read_body()
         local post = ngx.req.get_post_args()
 
-        if (_StrIsEmpty(post.user_id) or _StrIsEmpty(post.movie_id)) then
+        if (_StrIsEmpty(post.user_id) or _StrIsEmpty(post.movie_id) or _StrIsEmpty(post.rating)) then
            ngx.status = ngx.HTTP_BAD_REQUEST
            ngx.say("Incomplete arguments")
            ngx.log(ngx.ERR, "Incomplete arguments")
