@@ -1,1 +1,18 @@
+# IntelliJ
 .idea/*
+
+# SBT
+batch/project/boot/
+batch/project/target/bg-jobs/
+batch/project/target/
+batch/project/project/
+batch/target/global-logging/
+batch/target/streams/
+batch/target/task-temp-directory/
+batch/target/scala-2.11/classes/
+batch/target/scala-2.11/update/
+batch/target/scala-2.11/zinc/
+
+.DS_Store
+derby.log
+metastore_db/
