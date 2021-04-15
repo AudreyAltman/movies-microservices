@@ -1,89 +1,75 @@
-for i in {1..4}
-do
-  r=$((1 + $RANDOM % 4))
-  curl -d "user_id="$i"&movie_id=aaa&rating="$r localhost:8080/user_rating/upload
-done
+curl -d "user_id=1&movie_id=aaa&rating=1" localhost:8080/user_rating/upload
+curl -d "user_id=2&movie_id=aaa&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=6&movie_id=aaa&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=10&movie_id=aaa&rating=2" localhost:8080/user_rating/upload
 
-for i in {18..21}
-do
-  r=$((1 + $RANDOM % 4))
-  curl -d "user_id="$i"&movie_id=bbb&rating="$r localhost:8080/user_rating/upload
-done
+curl -d "user_id=17&movie_id=bbb&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=18&movie_id=bbb&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=19&movie_id=bbb&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=20&movie_id=bbb&rating=2" localhost:8080/user_rating/upload
 
-for i in {4..11}
-do
-  r=$((1 + $RANDOM % 4))
-  curl -d "user_id="$i"&movie_id=ccc&rating="$r localhost:8080/user_rating/upload
-done
+curl -d "user_id=4&movie_id=ccc&rating=2" localhost:8080/user_rating/upload
+curl -d "user_id=5&movie_id=ccc&rating=2" localhost:8080/user_rating/upload
+curl -d "user_id=7&movie_id=ccc&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=11&movie_id=ccc&rating=1" localhost:8080/user_rating/upload
+curl -d "user_id=12&movie_id=ccc&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=13&movie_id=ccc&rating=1" localhost:8080/user_rating/upload
 
-for i in {11..15}
-do
-  r=$((1 + $RANDOM % 4))
-  curl -d "user_id="$i"&movie_id=ddd&rating="$r localhost:8080/user_rating/upload
-done
+curl -d "user_id=8&movie_id=ddd&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=11&movie_id=ddd&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=13&movie_id=ddd&rating=4" localhost:8080/user_rating/upload
 
-for i in {1..6}
-do
-  r=$((1 + $RANDOM % 4))
-  curl -d "user_id="$i"&movie_id=eee&rating="$r localhost:8080/user_rating/upload
-done
+curl -d "user_id=1&movie_id=eee&rating=2" localhost:8080/user_rating/upload
+curl -d "user_id=3&movie_id=eee&rating=1" localhost:8080/user_rating/upload
+curl -d "user_id=5&movie_id=eee&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=15&movie_id=eee&rating=3" localhost:8080/user_rating/upload
 
-for i in {6..16}
-do
-  r=$((1 + $RANDOM % 4))
-  curl -d "user_id="$i"&movie_id=fff&rating="$r localhost:8080/user_rating/upload
-done
+curl -d "user_id=6&movie_id=fff&rating=2" localhost:8080/user_rating/upload
+curl -d "user_id=9&movie_id=fff&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=12&movie_id=fff&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=16&movie_id=fff&rating=2" localhost:8080/user_rating/upload
+curl -d "user_id=20&movie_id=fff&rating=1" localhost:8080/user_rating/upload
 
-for i in {16..21}
-do
-  r=$((1 + $RANDOM % 4))
-  curl -d "user_id="$i"&movie_id=ggg&rating="$r localhost:8080/user_rating/upload
-done
+curl -d "user_id=2&movie_id=ggg&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=4&movie_id=ggg&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=18&movie_id=ggg&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=20&movie_id=ggg&rating=3" localhost:8080/user_rating/upload
 
-for i in {2..5}
-do
-  r=$((1 + $RANDOM % 4))
-  curl -d "user_id="$i"&movie_id=hhh&rating="$r localhost:8080/user_rating/upload
-done
+curl -d "user_id=2&movie_id=hhh&rating=1" localhost:8080/user_rating/upload
+curl -d "user_id=3&movie_id=hhh&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=4&movie_id=hhh&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=5&movie_id=hhh&rating=3" localhost:8080/user_rating/upload
 
-for i in {17..21}
-do
-  r=$((1 + $RANDOM % 4))
-  curl -d "user_id="$i"&movie_id=iii&rating="$r localhost:8080/user_rating/upload
-done
+curl -d "user_id=7&movie_id=iii&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=17&movie_id=iii&rating=4" localhost:8080/user_rating/upload
 
-for i in {1..21}
-do
-  rem=$(($i % 2))
-  if [ "$rem" -ne "0" ]; then
-    r=$((1 + $RANDOM % 4))
-    curl -d "user_id="$i"&movie_id=jjj&rating="$r localhost:8080/user_rating/upload
-  fi
-done
+curl -d "user_id=8&movie_id=jjj&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=18&movie_id=jjj&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=19&movie_id=jjj&rating=3" localhost:8080/user_rating/upload
 
-for i in {1..21}
-do
-  rem=$(($i % 2))
-  if [ "$rem" -eq "0" ]; then
-    r=$((1 + $RANDOM % 4))
-    curl -d "user_id="$i"&movie_id=kkk&rating="$r localhost:8080/user_rating/upload
-  fi
-done
+curl -d "user_id=7&movie_id=kkk&rating=2" localhost:8080/user_rating/upload
+curl -d "user_id=8&movie_id=kkk&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=9&movie_id=kkk&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=10&movie_id=kkk&rating=4" localhost:8080/user_rating/upload
 
-for i in {1..21}
-do
-  rem=$(($i % 3))
-  if [ "$rem" -ne "0" ]; then
-    r=$((1 + $RANDOM % 4))
-    curl -d "user_id="$i"&movie_id=lll&rating="$r localhost:8080/user_rating/upload
-  fi
-done
+curl -d "user_id=2&movie_id=lll&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=4&movie_id=lll&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=6&movie_id=lll&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=8&movie_id=lll&rating=2" localhost:8080/user_rating/upload
+curl -d "user_id=10&movie_id=lll&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=12&movie_id=lll&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=14&movie_id=lll&rating=1" localhost:8080/user_rating/upload
+curl -d "user_id=16&movie_id=lll&rating=1" localhost:8080/user_rating/upload
+curl -d "user_id=18&movie_id=lll&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=20&movie_id=lll&rating=2" localhost:8080/user_rating/upload
 
-for i in {1..21}
-do
-  rem=$(($i % 3))
-  if [ "$rem" -eq "0" ]; then
-    r=$((1 + $RANDOM % 4))
-    curl -d "user_id="$i"&movie_id=mmm&rating="$r localhost:8080/user_rating/upload
-  fi
-done
+curl -d "user_id=1&movie_id=mmm&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=3&movie_id=mmm&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=5&movie_id=mmm&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=7&movie_id=mmm&rating=4" localhost:8080/user_rating/upload
+curl -d "user_id=9&movie_id=mmm&rating=2" localhost:8080/user_rating/upload
+curl -d "user_id=11&movie_id=mmm&rating=2" localhost:8080/user_rating/upload
+curl -d "user_id=13&movie_id=mmm&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=15&movie_id=mmm&rating=3" localhost:8080/user_rating/upload
+curl -d "user_id=17&movie_id=mmm&rating=2" localhost:8080/user_rating/upload
+curl -d "user_id=19&movie_id=mmm&rating=3" localhost:8080/user_rating/upload
