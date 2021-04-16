@@ -25,9 +25,19 @@ class MovieInfoServiceHandler : virtual public MovieInfoServiceIf {
     printf("GetMoviesByIds\n");
   }
 
-  void GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string) {
+  void GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string, const int64_t user_id) {
     // Your implementation goes here
     printf("GetMoviesByTitle\n");
+  }
+
+  void UploadMovies(std::string& _return, const std::vector<std::string> & movie_ids, const std::vector<std::string> & movie_titles, const std::vector<std::string> & movie_links) {
+    // Your implementation goes here
+    printf("UploadMovies\n");
+  }
+
+  void GetMovieLink(std::string& _return, const std::string& movie_name, const int64_t user_id) {
+    // Your implementation goes here
+    printf("GetMovieLink\n");
   }
 
 };
