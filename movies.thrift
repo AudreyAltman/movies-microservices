@@ -36,8 +36,20 @@ service MovieInfoService{
   )
 
   list<string> GetMoviesByTitle(
-    1: string movie_string
+    1: string movie_string;
+    2: i64 user_id;
   )throws (1: ServiceException se)
+  
+  string UploadMovies(
+    1: list<string> movie_ids;
+	  2: list<string> movie_titles;
+	  3: list<string> movie_links;
+  )throws (1: ServiceException se)
+  
+  string GetMovieLink(
+    1: string movie_name;
+	  2: i64 user_id;
+  )throws (1: ServiceException se) 
 }
 
 service UserLikesService{
