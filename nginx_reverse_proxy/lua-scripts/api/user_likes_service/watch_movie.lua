@@ -4,7 +4,7 @@ local function _StrIsEmpty(s)
   return s == nil or s == ''
 end
 
-function _M.Upload()
+function _M.Watch_Movie()
   local UserLikesServiceClient = require "movies_UserLikesService"
   local GenericObjectPool = require "GenericObjectPool"
   local ngx = ngx
@@ -20,13 +20,12 @@ function _M.Upload()
            ngx.exit(ngx.HTTP_BAD_REQUEST)
         end
 
-  ngx.say("Inside Nginx Lua script: Processing Upload User Rating... Request from: ", post.user_id)
+  ngx.say("Inside Nginx Lua script: Processing User Watch Movie... Request from: ", post.user_id)
   ngx.say("Movie id: ", post.movie_id)
-  ngx.say("Rating: ", post.rating)
 
   local client = GenericObjectPool:connection(UserLikesServiceClient, "user-likes-service", 9094)
 
-  local status, ret = pcall(client.UserRateMovie, client, post.user_id, post.movie_id, post.rating)
+  local status, ret = pcall(client.UserWatchMovie, client, post.user_id, post.movie_id)
   GenericObjectPool:returnConnection(client)
   ngx.say("Status: ", status)
 
@@ -35,17 +34,17 @@ function _M.Upload()
         ngx.status = ngx.HTTP_INTERNAL_SERVER_ERROR
         if (ret.message) then
             ngx.header.content_type = "text/plain"
-            ngx.say("Failed to upload rating: " .. ret.message)
-            ngx.log(ngx.ERR, "Failed to upload rating: " .. ret.message)
+            ngx.say("Failed to upload watch log: " .. ret.message)
+            ngx.log(ngx.ERR, "Failed to upload watch log: " .. ret.message)
         else
             ngx.header.content_type = "text/plain"
-            ngx.say("Failed to upload rating: " )
-            ngx.log(ngx.ERR, "Failed to upload rating: " )
+            ngx.say("Failed to upload watch log: " )
+            ngx.log(ngx.ERR, "Failed to upload watch log: " )
         end
         ngx.exit(ngx.HTTP_OK)
     else
         ngx.header.content_type = "text/plain"
-        ngx.say("Uploaded")
+        ngx.say("Uploaded watch log")
         ngx.exit(ngx.HTTP_OK)
     end
 
