@@ -31,6 +31,16 @@ local GetMoviesByTitle_args = __TObject:new{
   movie_string
 }
 
+local UploadMovies_args = __TObject:new{
+  movie_ids,
+  movie_titles,
+  movie_links
+}
+
+local GetMovieLink_args = __TObject:new{
+  movie_name
+}
+
 function MovieInfoServiceClient:GetMoviesByIds(movie_ids)
   self:send_GetMoviesByIds(movie_ids)
   return self:recv_GetMoviesByIds(movie_ids)
@@ -95,6 +105,72 @@ function MovieInfoServiceClient:recv_GetMoviesByTitle(movie_string)
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
 
+function MovieInfoServiceClient:UploadMovies(movie_ids, movie_titles, movie_links)
+  self:send_UploadMovies(movie_ids, movie_titles, movie_links)
+  return self:recv_UploadMovies(movie_ids, movie_titles, movie_links)
+end
+
+function MovieInfoServiceClient:send_UploadMovies(movie_ids, movie_titles, movie_links)
+  self.oprot:writeMessageBegin('UploadMovies', TMessageType.CALL, self._seqid)
+  local args = UploadMovies_args:new{}
+  args.movie_ids = movie_ids
+  args.movie_titles = movie_titles
+  args.movie_links = movie_links
+  args:write(self.oprot)
+  self.oprot:writeMessageEnd()
+  self.oprot.trans:flush()
+end
+
+function MovieInfoServiceClient:recv_UploadMovies(movie_ids, movie_titles, movie_links)
+  local fname, mtype, rseqid = self.iprot:readMessageBegin()
+  if mtype == TMessageType.EXCEPTION then
+    local x = TApplicationException:new{}
+    x:read(self.iprot)
+    self.iprot:readMessageEnd()
+    error(x)
+  end
+  local result = UploadMovies_result:new{}
+  result:read(self.iprot)
+  self.iprot:readMessageEnd()
+  if result.success ~= nil then
+    return result.success
+  elseif result.se then
+    error(result.se)
+  end
+  error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
+end
+function MovieInfoServiceClient:GetMovieLink(movie_name)
+  self:send_GetMovieLink(movie_name)
+  return self:recv_GetMovieLink(movie_name)
+end
+
+function MovieInfoServiceClient:send_GetMovieLink(movie_name)
+  self.oprot:writeMessageBegin('GetMovieLink', TMessageType.CALL, self._seqid)
+  local args = GetMovieLink_args:new{}
+  args.movie_name = movie_name
+  args:write(self.oprot)
+  self.oprot:writeMessageEnd()
+  self.oprot.trans:flush()
+end
+
+function MovieInfoServiceClient:recv_GetMovieLink(movie_name)
+  local fname, mtype, rseqid = self.iprot:readMessageBegin()
+  if mtype == TMessageType.EXCEPTION then
+    local x = TApplicationException:new{}
+    x:read(self.iprot)
+    self.iprot:readMessageEnd()
+    error(x)
+  end
+  local result = GetMovieLink_result:new{}
+  result:read(self.iprot)
+  self.iprot:readMessageEnd()
+  if result.success ~= nil then
+    return result.success
+  elseif result.se then
+    error(result.se)
+  end
+  error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
+end
 local MovieInfoServiceIface = __TObject:new{
   __type = 'MovieInfoServiceIface'
 }
@@ -162,6 +238,50 @@ function MovieInfoServiceProcessor:process_GetMoviesByTitle(seqid, iprot, oprot,
     result.success = res
   end
   oprot:writeMessageBegin('GetMoviesByTitle', reply_type, seqid)
+  result:write(oprot)
+  oprot:writeMessageEnd()
+  oprot.trans:flush()
+  return status, res
+end
+
+function MovieInfoServiceProcessor:process_UploadMovies(seqid, iprot, oprot, server_ctx)
+  local args = UploadMovies_args:new{}
+  local reply_type = TMessageType.REPLY
+  args:read(iprot)
+  iprot:readMessageEnd()
+  local result = UploadMovies_result:new{}
+  local status, res = pcall(self.handler.UploadMovies, self.handler, args.movie_ids, args.movie_titles, args.movie_links)
+  if not status then
+    reply_type = TMessageType.EXCEPTION
+    result = TApplicationException:new{message = res}
+  elseif ttype(res) == 'ServiceException' then
+    result.se = res
+  else
+    result.success = res
+  end
+  oprot:writeMessageBegin('UploadMovies', reply_type, seqid)
+  result:write(oprot)
+  oprot:writeMessageEnd()
+  oprot.trans:flush()
+  return status, res
+end
+
+function MovieInfoServiceProcessor:process_GetMovieLink(seqid, iprot, oprot, server_ctx)
+  local args = GetMovieLink_args:new{}
+  local reply_type = TMessageType.REPLY
+  args:read(iprot)
+  iprot:readMessageEnd()
+  local result = GetMovieLink_result:new{}
+  local status, res = pcall(self.handler.GetMovieLink, self.handler, args.movie_name)
+  if not status then
+    reply_type = TMessageType.EXCEPTION
+    result = TApplicationException:new{message = res}
+  elseif ttype(res) == 'ServiceException' then
+    result.se = res
+  else
+    result.success = res
+  end
+  oprot:writeMessageBegin('GetMovieLink', reply_type, seqid)
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
@@ -304,4 +424,211 @@ function GetMoviesByTitle_result:write(oprot)
   oprot:writeStructEnd()
 end
 
+function UploadMovies_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.LIST then
+        self.movie_ids = {}
+        local _etype33, _size30 = iprot:readListBegin()
+        for _i=1,_size30 do
+          local _elem34 = iprot:readString()
+          table.insert(self.movie_ids, _elem34)
+        end
+        iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.LIST then
+        self.movie_titles = {}
+        local _etype38, _size35 = iprot:readListBegin()
+        for _i=1,_size35 do
+          local _elem39 = iprot:readString()
+          table.insert(self.movie_titles, _elem39)
+        end
+        iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 3 then
+      if ftype == TType.LIST then
+        self.movie_links = {}
+        local _etype43, _size40 = iprot:readListBegin()
+        for _i=1,_size40 do
+          local _elem44 = iprot:readString()
+          table.insert(self.movie_links, _elem44)
+        end
+        iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function UploadMovies_args:write(oprot)
+  oprot:writeStructBegin('UploadMovies_args')
+  if self.movie_ids ~= nil then
+    oprot:writeFieldBegin('movie_ids', TType.LIST, 1)
+    oprot:writeListBegin(TType.STRING, #self.movie_ids)
+    for _,iter45 in ipairs(self.movie_ids) do
+      oprot:writeString(iter45)
+    end
+    oprot:writeListEnd()
+    oprot:writeFieldEnd()
+  end
+  if self.movie_titles ~= nil then
+    oprot:writeFieldBegin('movie_titles', TType.LIST, 2)
+    oprot:writeListBegin(TType.STRING, #self.movie_titles)
+    for _,iter46 in ipairs(self.movie_titles) do
+      oprot:writeString(iter46)
+    end
+    oprot:writeListEnd()
+    oprot:writeFieldEnd()
+  end
+  if self.movie_links ~= nil then
+    oprot:writeFieldBegin('movie_links', TType.LIST, 3)
+    oprot:writeListBegin(TType.STRING, #self.movie_links)
+    for _,iter47 in ipairs(self.movie_links) do
+      oprot:writeString(iter47)
+    end
+    oprot:writeListEnd()
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+UploadMovies_result = __TObject:new{
+  success,
+  se
+}
+function UploadMovies_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.STRING then
+        self.success = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.se = ServiceException:new{}
+        self.se:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function UploadMovies_result:write(oprot)
+  oprot:writeStructBegin('UploadMovies_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.STRING, 0)
+    oprot:writeString(self.success)
+    oprot:writeFieldEnd()
+  end
+  if self.se ~= nil then
+    oprot:writeFieldBegin('se', TType.STRUCT, 1)
+    self.se:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+function GetMovieLink_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.movie_name = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function GetMovieLink_args:write(oprot)
+  oprot:writeStructBegin('GetMovieLink_args')
+  if self.movie_name ~= nil then
+    oprot:writeFieldBegin('movie_name', TType.STRING, 1)
+    oprot:writeString(self.movie_name)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+GetMovieLink_result = __TObject:new{
+  success,
+  se
+}
+
+function GetMovieLink_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.STRING then
+        self.success = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.se = ServiceException:new{}
+        self.se:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function GetMovieLink_result:write(oprot)
+  oprot:writeStructBegin('GetMovieLink_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.STRING, 0)
+    oprot:writeString(self.success)
+    oprot:writeFieldEnd()
+  end
+  if self.se ~= nil then
+    oprot:writeFieldBegin('se', TType.STRUCT, 1)
+    self.se:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
 return MovieInfoServiceClient
