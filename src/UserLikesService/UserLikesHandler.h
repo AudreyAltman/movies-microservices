@@ -53,7 +53,7 @@ void UserLikesServiceHandler::UserRateMovie(const int64_t user_id, const std::st
 		}
 
 		// Get mongo collection
-		auto collection_users = mongoc_client_get_collection(mongodb_client, "likes", "user-likes");
+		auto collection_users = mongoc_client_get_collection(mongodb_client, "user-likes", "user-likes");
 		if (!collection_users) {
 		  ServiceException se;
 		  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
@@ -167,7 +167,7 @@ void UserLikesServiceHandler::GetUsersLikedMovies(std::vector<std::string>& _ret
 	}
 
 	// Get mongo collection
-	auto collection = mongoc_client_get_collection(mongodb_client, "likes", "user-likes");
+	auto collection = mongoc_client_get_collection(mongodb_client, "user-likes", "user-likes");
 	if (!collection) {
 	  ServiceException se;
 	  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
@@ -225,7 +225,7 @@ void UserLikesServiceHandler::UserWatchMovie(const int64_t user_id, const std::s
 	}
 
 	// Get mongo collection
-	auto collection = mongoc_client_get_collection(mongodb_client, "likes", "user-likes");
+	auto collection = mongoc_client_get_collection(mongodb_client, "user-likes", "user-likes");
 	if (!collection) {
 	  ServiceException se;
 	  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
