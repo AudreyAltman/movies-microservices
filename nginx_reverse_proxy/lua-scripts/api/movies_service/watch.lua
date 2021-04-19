@@ -13,16 +13,18 @@ function _M.MovieLink()
   ngx.req.read_body()
         local post = ngx.req.get_post_args()
 
-        if (_StrIsEmpty(post.movie_name) ) then
+        if (_StrIsEmpty(post.movie_name) or _StrIsEmpty(post.user_id)) then
            ngx.status = ngx.HTTP_BAD_REQUEST
            ngx.say("Incomplete arguments")
            ngx.log(ngx.ERR, "Incomplete arguments")
            ngx.exit(ngx.HTTP_BAD_REQUEST)
         end
 
---  ngx.say("Inside Nginx Lua script: Processing Get Movie list... Request from: ", post.movie_name)
+  ngx.say("Request from user id: ", post.user_id)
+  ngx.say("Fetching link for the movie name : ", post.movie_name)
+  ngx.say("--------------------------------------------------------")
   local client = GenericObjectPool:connection(MovieInfoServiceClient, "movie-info-service", 9093)  
-  local status, ret = pcall(client.GetMovieLink, client, post.movie_name)
+  local status, ret = pcall(client.GetMovieLink, client, post.movie_name, post.user_id)
   GenericObjectPool:returnConnection(client)
   ngx.say("Status: ",status)
 
@@ -41,7 +43,7 @@ function _M.MovieLink()
         ngx.exit(ngx.HTTP_OK)
     else
         ngx.header.content_type = "text/plain"
-        ngx.say("Use the below link to wath the movie: ",post.movie_name)
+        ngx.say("Click on the below link to watch the movie: ",post.movie_name)
 	ngx.say("Link: https://videorack.s3.amazonaws.com",ret)
         ngx.exit(ngx.HTTP_OK)
     end

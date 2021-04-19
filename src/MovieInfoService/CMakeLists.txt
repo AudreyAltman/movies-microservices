@@ -2,6 +2,7 @@ add_executable(
     MovieInfoService
     MovieInfoService.cpp
     ${THRIFT_GEN_CPP_DIR}/MovieInfoService.cpp
+    ${THRIFT_GEN_CPP_DIR}/UserLikesService.cpp
     ${THRIFT_GEN_CPP_DIR}/movies_types.cpp
 )
 

@@ -32,7 +32,7 @@ function _M.Upload()
             ngx.log(ngx.ERR, "Failed to upload Movies: " .. ret.message)
         else
             ngx.header.content_type = "text/plain"
-            ngx.say("Failed to uploadt Movies: " )
+            ngx.say("Failed to upload Movies: " )
             ngx.log(ngx.ERR, "Failed to upload Movies: " )
         end
         ngx.exit(ngx.HTTP_OK)
