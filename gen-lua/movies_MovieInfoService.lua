@@ -28,7 +28,8 @@ local GetMoviesByIds_args = __TObject:new{
 }
 
 local GetMoviesByTitle_args = __TObject:new{
-  movie_string
+  movie_string,
+  user_id
 }
 
 local UploadMovies_args = __TObject:new{
@@ -38,7 +39,8 @@ local UploadMovies_args = __TObject:new{
 }
 
 local GetMovieLink_args = __TObject:new{
-  movie_name
+  movie_name,
+  user_id
 }
 
 function MovieInfoServiceClient:GetMoviesByIds(movie_ids)
@@ -72,21 +74,22 @@ function MovieInfoServiceClient:recv_GetMoviesByIds(movie_ids)
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
 
-function MovieInfoServiceClient:GetMoviesByTitle(movie_string)
-  self:send_GetMoviesByTitle(movie_string)
-  return self:recv_GetMoviesByTitle(movie_string)
+function MovieInfoServiceClient:GetMoviesByTitle(movie_string, user_id)
+  self:send_GetMoviesByTitle(movie_string, user_id)
+  return self:recv_GetMoviesByTitle(movie_string, user_id)
 end
 
-function MovieInfoServiceClient:send_GetMoviesByTitle(movie_string)
+function MovieInfoServiceClient:send_GetMoviesByTitle(movie_string, user_id)
   self.oprot:writeMessageBegin('GetMoviesByTitle', TMessageType.CALL, self._seqid)
   local args = GetMoviesByTitle_args:new{}
   args.movie_string = movie_string
+  args.user_id = user_id
   args:write(self.oprot)
   self.oprot:writeMessageEnd()
   self.oprot.trans:flush()
 end
 
-function MovieInfoServiceClient:recv_GetMoviesByTitle(movie_string)
+function MovieInfoServiceClient:recv_GetMoviesByTitle(movie_string, user_id)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -139,21 +142,23 @@ function MovieInfoServiceClient:recv_UploadMovies(movie_ids, movie_titles, movie
   end
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
-function MovieInfoServiceClient:GetMovieLink(movie_name)
-  self:send_GetMovieLink(movie_name)
-  return self:recv_GetMovieLink(movie_name)
+
+function MovieInfoServiceClient:GetMovieLink(movie_name, user_id)
+  self:send_GetMovieLink(movie_name, user_id)
+  return self:recv_GetMovieLink(movie_name, user_id)
 end
 
-function MovieInfoServiceClient:send_GetMovieLink(movie_name)
+function MovieInfoServiceClient:send_GetMovieLink(movie_name, user_id)
   self.oprot:writeMessageBegin('GetMovieLink', TMessageType.CALL, self._seqid)
   local args = GetMovieLink_args:new{}
   args.movie_name = movie_name
+  args.user_id = user_id
   args:write(self.oprot)
   self.oprot:writeMessageEnd()
   self.oprot.trans:flush()
 end
 
-function MovieInfoServiceClient:recv_GetMovieLink(movie_name)
+function MovieInfoServiceClient:recv_GetMovieLink(movie_name, user_id)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -228,7 +233,7 @@ function MovieInfoServiceProcessor:process_GetMoviesByTitle(seqid, iprot, oprot,
   args:read(iprot)
   iprot:readMessageEnd()
   local result = GetMoviesByTitle_result:new{}
-  local status, res = pcall(self.handler.GetMoviesByTitle, self.handler, args.movie_string)
+  local status, res = pcall(self.handler.GetMoviesByTitle, self.handler, args.movie_string, args.user_id)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
@@ -272,7 +277,7 @@ function MovieInfoServiceProcessor:process_GetMovieLink(seqid, iprot, oprot, ser
   args:read(iprot)
   iprot:readMessageEnd()
   local result = GetMovieLink_result:new{}
-  local status, res = pcall(self.handler.GetMovieLink, self.handler, args.movie_name)
+  local status, res = pcall(self.handler.GetMovieLink, self.handler, args.movie_name, args.user_id)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
@@ -347,6 +352,12 @@ function GetMoviesByTitle_args:read(iprot)
       else
         iprot:skip(ftype)
       end
+    elseif fid == 2 then
+      if ftype == TType.I64 then
+        self.user_id = iprot:readI64()
+      else
+        iprot:skip(ftype)
+      end
     else
       iprot:skip(ftype)
     end
@@ -360,6 +371,11 @@ function GetMoviesByTitle_args:write(oprot)
   if self.movie_string ~= nil then
     oprot:writeFieldBegin('movie_string', TType.STRING, 1)
     oprot:writeString(self.movie_string)
+    oprot:writeFieldEnd()
+  end
+  if self.user_id ~= nil then
+    oprot:writeFieldBegin('user_id', TType.I64, 2)
+    oprot:writeI64(self.user_id)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
@@ -565,6 +581,12 @@ function GetMovieLink_args:read(iprot)
       else
         iprot:skip(ftype)
       end
+    elseif fid == 2 then
+      if ftype == TType.I64 then
+        self.user_id = iprot:readI64()
+      else
+        iprot:skip(ftype)
+      end
     else
       iprot:skip(ftype)
     end
@@ -578,6 +600,11 @@ function GetMovieLink_args:write(oprot)
   if self.movie_name ~= nil then
     oprot:writeFieldBegin('movie_name', TType.STRING, 1)
     oprot:writeString(self.movie_name)
+    oprot:writeFieldEnd()
+  end
+  if self.user_id ~= nil then
+    oprot:writeFieldBegin('user_id', TType.I64, 2)
+    oprot:writeI64(self.user_id)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()

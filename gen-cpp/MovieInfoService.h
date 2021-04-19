@@ -23,9 +23,9 @@ class MovieInfoServiceIf {
  public:
   virtual ~MovieInfoServiceIf() {}
   virtual void GetMoviesByIds(std::vector<std::string> & _return, const std::vector<std::string> & movie_ids) = 0;
-  virtual void GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string) = 0;
+  virtual void GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string, const int64_t user_id) = 0;
   virtual void UploadMovies(std::string& _return, const std::vector<std::string> & movie_ids, const std::vector<std::string> & movie_titles, const std::vector<std::string> & movie_links) = 0;
-  virtual void GetMovieLink(std::string& _return, const std::string& movie_name) = 0;
+  virtual void GetMovieLink(std::string& _return, const std::string& movie_name, const int64_t user_id) = 0;
 };
 
 class MovieInfoServiceIfFactory {
@@ -58,13 +58,13 @@ class MovieInfoServiceNull : virtual public MovieInfoServiceIf {
   void GetMoviesByIds(std::vector<std::string> & /* _return */, const std::vector<std::string> & /* movie_ids */) {
     return;
   }
-  void GetMoviesByTitle(std::vector<std::string> & /* _return */, const std::string& /* movie_string */) {
+  void GetMoviesByTitle(std::vector<std::string> & /* _return */, const std::string& /* movie_string */, const int64_t /* user_id */) {
     return;
   }
   void UploadMovies(std::string& /* _return */, const std::vector<std::string> & /* movie_ids */, const std::vector<std::string> & /* movie_titles */, const std::vector<std::string> & /* movie_links */) {
     return;
   }
-  void GetMovieLink(std::string& /* _return */, const std::string& /* movie_name */) {
+  void GetMovieLink(std::string& /* _return */, const std::string& /* movie_name */, const int64_t /* user_id */) {
     return;
   }
 };
@@ -174,8 +174,9 @@ class MovieInfoService_GetMoviesByIds_presult {
 };
 
 typedef struct _MovieInfoService_GetMoviesByTitle_args__isset {
-  _MovieInfoService_GetMoviesByTitle_args__isset() : movie_string(false) {}
+  _MovieInfoService_GetMoviesByTitle_args__isset() : movie_string(false), user_id(false) {}
   bool movie_string :1;
+  bool user_id :1;
 } _MovieInfoService_GetMoviesByTitle_args__isset;
 
 class MovieInfoService_GetMoviesByTitle_args {
@@ -183,19 +184,24 @@ class MovieInfoService_GetMoviesByTitle_args {
 
   MovieInfoService_GetMoviesByTitle_args(const MovieInfoService_GetMoviesByTitle_args&);
   MovieInfoService_GetMoviesByTitle_args& operator=(const MovieInfoService_GetMoviesByTitle_args&);
-  MovieInfoService_GetMoviesByTitle_args() : movie_string() {
+  MovieInfoService_GetMoviesByTitle_args() : movie_string(), user_id(0) {
   }
 
   virtual ~MovieInfoService_GetMoviesByTitle_args() noexcept;
   std::string movie_string;
+  int64_t user_id;
 
   _MovieInfoService_GetMoviesByTitle_args__isset __isset;
 
   void __set_movie_string(const std::string& val);
 
+  void __set_user_id(const int64_t val);
+
   bool operator == (const MovieInfoService_GetMoviesByTitle_args & rhs) const
   {
     if (!(movie_string == rhs.movie_string))
+      return false;
+    if (!(user_id == rhs.user_id))
       return false;
     return true;
   }
@@ -217,6 +223,7 @@ class MovieInfoService_GetMoviesByTitle_pargs {
 
   virtual ~MovieInfoService_GetMoviesByTitle_pargs() noexcept;
   const std::string* movie_string;
+  const int64_t* user_id;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -412,8 +419,9 @@ class MovieInfoService_UploadMovies_presult {
 };
 
 typedef struct _MovieInfoService_GetMovieLink_args__isset {
-  _MovieInfoService_GetMovieLink_args__isset() : movie_name(false) {}
+  _MovieInfoService_GetMovieLink_args__isset() : movie_name(false), user_id(false) {}
   bool movie_name :1;
+  bool user_id :1;
 } _MovieInfoService_GetMovieLink_args__isset;
 
 class MovieInfoService_GetMovieLink_args {
@@ -421,19 +429,24 @@ class MovieInfoService_GetMovieLink_args {
 
   MovieInfoService_GetMovieLink_args(const MovieInfoService_GetMovieLink_args&);
   MovieInfoService_GetMovieLink_args& operator=(const MovieInfoService_GetMovieLink_args&);
-  MovieInfoService_GetMovieLink_args() : movie_name() {
+  MovieInfoService_GetMovieLink_args() : movie_name(), user_id(0) {
   }
 
   virtual ~MovieInfoService_GetMovieLink_args() noexcept;
   std::string movie_name;
+  int64_t user_id;
 
   _MovieInfoService_GetMovieLink_args__isset __isset;
 
   void __set_movie_name(const std::string& val);
 
+  void __set_user_id(const int64_t val);
+
   bool operator == (const MovieInfoService_GetMovieLink_args & rhs) const
   {
     if (!(movie_name == rhs.movie_name))
+      return false;
+    if (!(user_id == rhs.user_id))
       return false;
     return true;
   }
@@ -455,6 +468,7 @@ class MovieInfoService_GetMovieLink_pargs {
 
   virtual ~MovieInfoService_GetMovieLink_pargs() noexcept;
   const std::string* movie_name;
+  const int64_t* user_id;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -551,14 +565,14 @@ class MovieInfoServiceClient : virtual public MovieInfoServiceIf {
   void GetMoviesByIds(std::vector<std::string> & _return, const std::vector<std::string> & movie_ids);
   void send_GetMoviesByIds(const std::vector<std::string> & movie_ids);
   void recv_GetMoviesByIds(std::vector<std::string> & _return);
-  void GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string);
-  void send_GetMoviesByTitle(const std::string& movie_string);
+  void GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string, const int64_t user_id);
+  void send_GetMoviesByTitle(const std::string& movie_string, const int64_t user_id);
   void recv_GetMoviesByTitle(std::vector<std::string> & _return);
   void UploadMovies(std::string& _return, const std::vector<std::string> & movie_ids, const std::vector<std::string> & movie_titles, const std::vector<std::string> & movie_links);
   void send_UploadMovies(const std::vector<std::string> & movie_ids, const std::vector<std::string> & movie_titles, const std::vector<std::string> & movie_links);
   void recv_UploadMovies(std::string& _return);
-  void GetMovieLink(std::string& _return, const std::string& movie_name);
-  void send_GetMovieLink(const std::string& movie_name);
+  void GetMovieLink(std::string& _return, const std::string& movie_name, const int64_t user_id);
+  void send_GetMovieLink(const std::string& movie_name, const int64_t user_id);
   void recv_GetMovieLink(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
@@ -624,13 +638,13 @@ class MovieInfoServiceMultiface : virtual public MovieInfoServiceIf {
     return;
   }
 
-  void GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string) {
+  void GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string, const int64_t user_id) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->GetMoviesByTitle(_return, movie_string);
+      ifaces_[i]->GetMoviesByTitle(_return, movie_string, user_id);
     }
-    ifaces_[i]->GetMoviesByTitle(_return, movie_string);
+    ifaces_[i]->GetMoviesByTitle(_return, movie_string, user_id);
     return;
   }
 
@@ -644,13 +658,13 @@ class MovieInfoServiceMultiface : virtual public MovieInfoServiceIf {
     return;
   }
 
-  void GetMovieLink(std::string& _return, const std::string& movie_name) {
+  void GetMovieLink(std::string& _return, const std::string& movie_name, const int64_t user_id) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->GetMovieLink(_return, movie_name);
+      ifaces_[i]->GetMovieLink(_return, movie_name, user_id);
     }
-    ifaces_[i]->GetMovieLink(_return, movie_name);
+    ifaces_[i]->GetMovieLink(_return, movie_name, user_id);
     return;
   }
 
@@ -689,14 +703,14 @@ class MovieInfoServiceConcurrentClient : virtual public MovieInfoServiceIf {
   void GetMoviesByIds(std::vector<std::string> & _return, const std::vector<std::string> & movie_ids);
   int32_t send_GetMoviesByIds(const std::vector<std::string> & movie_ids);
   void recv_GetMoviesByIds(std::vector<std::string> & _return, const int32_t seqid);
-  void GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string);
-  int32_t send_GetMoviesByTitle(const std::string& movie_string);
+  void GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string, const int64_t user_id);
+  int32_t send_GetMoviesByTitle(const std::string& movie_string, const int64_t user_id);
   void recv_GetMoviesByTitle(std::vector<std::string> & _return, const int32_t seqid);
   void UploadMovies(std::string& _return, const std::vector<std::string> & movie_ids, const std::vector<std::string> & movie_titles, const std::vector<std::string> & movie_links);
   int32_t send_UploadMovies(const std::vector<std::string> & movie_ids, const std::vector<std::string> & movie_titles, const std::vector<std::string> & movie_links);
   void recv_UploadMovies(std::string& _return, const int32_t seqid);
-  void GetMovieLink(std::string& _return, const std::string& movie_name);
-  int32_t send_GetMovieLink(const std::string& movie_name);
+  void GetMovieLink(std::string& _return, const std::string& movie_name, const int64_t user_id);
+  int32_t send_GetMovieLink(const std::string& movie_name, const int64_t user_id);
   void recv_GetMovieLink(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;

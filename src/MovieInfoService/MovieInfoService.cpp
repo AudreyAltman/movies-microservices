@@ -41,14 +41,22 @@ int main(int argc, char **argv) {
 
   // 3: get my port
   int my_port = config_json["movie-info-service"]["port"];
+   
+  // Get the user likes service's port and address
+     int user_likes_service_port = config_json["user-likes-service"]["port"];
+     std::string user_likes_service_addr = config_json["user-likes-service"]["addr"];
+ 
+  // Get the client of user-likes-service
+     ClientPool<ThriftClient<UserLikesServiceClient>> user_likes_client_pool(
+      "user-likes-service", user_likes_service_addr, user_likes_service_port, 0, 128, 1000);
 
-// Get mongodb client pool
+  // Get mongodb client pool
    mongoc_client_pool_t* mongodb_client_pool =
    init_mongodb_client_pool(config_json, "movies", 128);
         	 
- 	 	 std::cout << "Mongodb client pool done ..." << std::endl;
-   	 	   if (mongodb_client_pool == nullptr) {
-	 	        return EXIT_FAILURE;
+        std::cout << "Mongodb client pool done ..." << std::endl;
+        if (mongodb_client_pool == nullptr) {
+        return EXIT_FAILURE;
     	          }
    	 	            
     
@@ -68,49 +76,11 @@ int main(int argc, char **argv) {
  	          mongoc_client_pool_push(mongodb_client_pool, mongodb_client);
   	          throw se;
  		 }
-
-
-/*	 mongoc_bulk_operation_t *bulk;
- 	 bson_error_t error;
-	 bool ret;
-	 int i;
-
-	 std::vector<std::string> movie_ids{"MOV0001","MOV0002","MOV0003","MOV0004"};
-	 std::vector<std::string> movie_titles{"Avengers","Catwoman","Batman","Spiderman"};
-
-	 bulk = mongoc_collection_create_bulk_operation_with_opts (collection, NULL);
-
-	 for (i = 0; i < 4; i++) {
-	  bson_t *movie_doc = bson_new();
-	  std::string &id = movie_ids[i];
-	  std::string &title = movie_titles[i];
-	  BSON_APPEND_UTF8(movie_doc, "movie_id", id.c_str());
-          BSON_APPEND_UTF8(movie_doc, "movie_title", title.c_str());
-	  
-	  mongoc_bulk_operation_insert (bulk, movie_doc);
-	  std::cout << "INSEERT **************************** "<< title.c_str() << " done" <<std::endl;
-	  bson_destroy(movie_doc);
-	 }  
-	     std::cout << "BEFORE BULK DONE !!!!!!! ..." << std::endl;
-
-	   ret = mongoc_bulk_operation_execute (bulk, NULL, &error);
-	    if (!ret) {
-                  std::cout << "Movies data Insert failed ..." << std::endl;
-		  ServiceException se;
-                  se.errorCode = ErrorCode::SE_MONGODB_ERROR;
-                  se.message = error.message;
-		  throw se;
-                  }
-              std::cout << "DATA BULK INSERT DONE0 !!!!!!!! ..." << std::endl;
-
-              mongoc_collection_destroy(collection);
-              mongoc_client_pool_push(mongodb_client_pool, mongodb_client);
-              mongoc_cleanup ();
-  */            
+           
   // 4: configure this server
   TThreadedServer server(
       std::make_shared<MovieInfoServiceProcessor>(
-      std::make_shared<MovieInfoServiceHandler>(mongodb_client_pool,mongodb_client)),
+      std::make_shared<MovieInfoServiceHandler>(mongodb_client_pool, mongodb_client, &user_likes_client_pool)),
       std::make_shared<TServerSocket>("0.0.0.0", my_port),
       std::make_shared<TFramedTransportFactory>(),
       std::make_shared<TBinaryProtocolFactory>()

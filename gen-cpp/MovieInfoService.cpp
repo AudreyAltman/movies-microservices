@@ -289,6 +289,14 @@ uint32_t MovieInfoService_GetMoviesByTitle_args::read(::apache::thrift::protocol
           xfer += iprot->skip(ftype);
         }
         break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->user_id);
+          this->__isset.user_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -310,6 +318,10 @@ uint32_t MovieInfoService_GetMoviesByTitle_args::write(::apache::thrift::protoco
   xfer += oprot->writeString(this->movie_string);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->user_id);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -327,6 +339,10 @@ uint32_t MovieInfoService_GetMoviesByTitle_pargs::write(::apache::thrift::protoc
 
   xfer += oprot->writeFieldBegin("movie_string", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->movie_string)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64((*(this->user_id)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -851,6 +867,14 @@ uint32_t MovieInfoService_GetMovieLink_args::read(::apache::thrift::protocol::TP
           xfer += iprot->skip(ftype);
         }
         break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->user_id);
+          this->__isset.user_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -872,6 +896,10 @@ uint32_t MovieInfoService_GetMovieLink_args::write(::apache::thrift::protocol::T
   xfer += oprot->writeString(this->movie_name);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->user_id);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -889,6 +917,10 @@ uint32_t MovieInfoService_GetMovieLink_pargs::write(::apache::thrift::protocol::
 
   xfer += oprot->writeFieldBegin("movie_name", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->movie_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64((*(this->user_id)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -1082,19 +1114,20 @@ void MovieInfoServiceClient::recv_GetMoviesByIds(std::vector<std::string> & _ret
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "GetMoviesByIds failed: unknown result");
 }
 
-void MovieInfoServiceClient::GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string)
+void MovieInfoServiceClient::GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string, const int64_t user_id)
 {
-  send_GetMoviesByTitle(movie_string);
+  send_GetMoviesByTitle(movie_string, user_id);
   recv_GetMoviesByTitle(_return);
 }
 
-void MovieInfoServiceClient::send_GetMoviesByTitle(const std::string& movie_string)
+void MovieInfoServiceClient::send_GetMoviesByTitle(const std::string& movie_string, const int64_t user_id)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("GetMoviesByTitle", ::apache::thrift::protocol::T_CALL, cseqid);
 
   MovieInfoService_GetMoviesByTitle_pargs args;
   args.movie_string = &movie_string;
+  args.user_id = &user_id;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -1206,19 +1239,20 @@ void MovieInfoServiceClient::recv_UploadMovies(std::string& _return)
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "UploadMovies failed: unknown result");
 }
 
-void MovieInfoServiceClient::GetMovieLink(std::string& _return, const std::string& movie_name)
+void MovieInfoServiceClient::GetMovieLink(std::string& _return, const std::string& movie_name, const int64_t user_id)
 {
-  send_GetMovieLink(movie_name);
+  send_GetMovieLink(movie_name, user_id);
   recv_GetMovieLink(_return);
 }
 
-void MovieInfoServiceClient::send_GetMovieLink(const std::string& movie_name)
+void MovieInfoServiceClient::send_GetMovieLink(const std::string& movie_name, const int64_t user_id)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("GetMovieLink", ::apache::thrift::protocol::T_CALL, cseqid);
 
   MovieInfoService_GetMovieLink_pargs args;
   args.movie_name = &movie_name;
+  args.user_id = &user_id;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -1363,7 +1397,7 @@ void MovieInfoServiceProcessor::process_GetMoviesByTitle(int32_t seqid, ::apache
 
   MovieInfoService_GetMoviesByTitle_result result;
   try {
-    iface_->GetMoviesByTitle(result.success, args.movie_string);
+    iface_->GetMoviesByTitle(result.success, args.movie_string, args.user_id);
     result.__isset.success = true;
   } catch (ServiceException &se) {
     result.se = se;
@@ -1477,7 +1511,7 @@ void MovieInfoServiceProcessor::process_GetMovieLink(int32_t seqid, ::apache::th
 
   MovieInfoService_GetMovieLink_result result;
   try {
-    iface_->GetMovieLink(result.success, args.movie_name);
+    iface_->GetMovieLink(result.success, args.movie_name, args.user_id);
     result.__isset.success = true;
   } catch (ServiceException &se) {
     result.se = se;
@@ -1602,13 +1636,13 @@ void MovieInfoServiceConcurrentClient::recv_GetMoviesByIds(std::vector<std::stri
   } // end while(true)
 }
 
-void MovieInfoServiceConcurrentClient::GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string)
+void MovieInfoServiceConcurrentClient::GetMoviesByTitle(std::vector<std::string> & _return, const std::string& movie_string, const int64_t user_id)
 {
-  int32_t seqid = send_GetMoviesByTitle(movie_string);
+  int32_t seqid = send_GetMoviesByTitle(movie_string, user_id);
   recv_GetMoviesByTitle(_return, seqid);
 }
 
-int32_t MovieInfoServiceConcurrentClient::send_GetMoviesByTitle(const std::string& movie_string)
+int32_t MovieInfoServiceConcurrentClient::send_GetMoviesByTitle(const std::string& movie_string, const int64_t user_id)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -1616,6 +1650,7 @@ int32_t MovieInfoServiceConcurrentClient::send_GetMoviesByTitle(const std::strin
 
   MovieInfoService_GetMoviesByTitle_pargs args;
   args.movie_string = &movie_string;
+  args.user_id = &user_id;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -1780,13 +1815,13 @@ void MovieInfoServiceConcurrentClient::recv_UploadMovies(std::string& _return, c
   } // end while(true)
 }
 
-void MovieInfoServiceConcurrentClient::GetMovieLink(std::string& _return, const std::string& movie_name)
+void MovieInfoServiceConcurrentClient::GetMovieLink(std::string& _return, const std::string& movie_name, const int64_t user_id)
 {
-  int32_t seqid = send_GetMovieLink(movie_name);
+  int32_t seqid = send_GetMovieLink(movie_name, user_id);
   recv_GetMovieLink(_return, seqid);
 }
 
-int32_t MovieInfoServiceConcurrentClient::send_GetMovieLink(const std::string& movie_name)
+int32_t MovieInfoServiceConcurrentClient::send_GetMovieLink(const std::string& movie_name, const int64_t user_id)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -1794,6 +1829,7 @@ int32_t MovieInfoServiceConcurrentClient::send_GetMovieLink(const std::string& m
 
   MovieInfoService_GetMovieLink_pargs args;
   args.movie_name = &movie_name;
+  args.user_id = &user_id;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

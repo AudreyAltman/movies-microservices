@@ -22,7 +22,7 @@ function _M.MovieLink()
 
 --  ngx.say("Inside Nginx Lua script: Processing Get Movie list... Request from: ", post.movie_name)
   local client = GenericObjectPool:connection(MovieInfoServiceClient, "movie-info-service", 9093)  
-  local status, ret = pcall(client.GetMovieLink, client, post.movie_name)
+  local status, ret = pcall(client.GetMovieLink, client, post.movie_name, 123)
   GenericObjectPool:returnConnection(client)
   ngx.say("Status: ",status)
 
