@@ -45,6 +45,8 @@ function _M.MovieLink()
         ngx.header.content_type = "text/plain"
         ngx.say("Click on the below link to watch the movie: ",post.movie_name)
 	ngx.say("Link: https://videorack.s3.amazonaws.com",ret)
+	ngx.say(" ")
+	ngx.say(" ")
         ngx.exit(ngx.HTTP_OK)
     end
 
