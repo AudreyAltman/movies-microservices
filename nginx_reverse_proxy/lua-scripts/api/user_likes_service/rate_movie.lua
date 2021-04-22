@@ -20,7 +20,7 @@ function _M.Rate_Movie()
            ngx.exit(ngx.HTTP_BAD_REQUEST)
         end
 
-  ngx.say("Inside Nginx Lua script: Processing Upload User Rating... Request from: ", post.user_id)
+  ngx.say("Inside Nginx Lua script: Processing Upload User Rating... Request from user: ", post.user_id)
   ngx.say("Movie id: ", post.movie_id)
   ngx.say("Rating: ", post.rating)
 
@@ -45,7 +45,7 @@ function _M.Rate_Movie()
         ngx.exit(ngx.HTTP_OK)
     else
         ngx.header.content_type = "text/plain"
-        ngx.say("Uploaded")
+        ngx.say("Uploaded\n")
         ngx.exit(ngx.HTTP_OK)
     end
 

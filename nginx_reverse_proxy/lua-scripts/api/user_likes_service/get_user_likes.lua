@@ -51,7 +51,7 @@ function _M.Get_User_Likes()
             end
             ngx.say("Movie Ids:\n", str)
         else
-            ngx.say("There are no liked movies for this user")
+            ngx.say("There are no liked movies for this user\n")
         end
 
         ngx.exit(ngx.HTTP_OK)
