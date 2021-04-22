@@ -44,7 +44,7 @@ function _M.Watch_Movie()
         ngx.exit(ngx.HTTP_OK)
     else
         ngx.header.content_type = "text/plain"
-        ngx.say("Uploaded watch log")
+        ngx.say("Uploaded watch log\n")
         ngx.exit(ngx.HTTP_OK)
     end
 
