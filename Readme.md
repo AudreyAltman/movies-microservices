@@ -20,24 +20,31 @@ Audrey Altman, Vishakha Kumar, and Nicole Stark
 
 # Use
 Run docker-compose script to run all the containers:
+
 $ docker-compose up
 
 Seed the database with default recommendations for each user:
+
 $ sh script/upload_recommendation.sh
 
 Check the default recommendations:
+
 $ sh script/get_recommendations.sh
 
 Add user ratings for various movies:
+
 $ sh sh script/upload_user_rating.sh
 
 Run a batch job to generate new recommedations based on user ratings:
+
 $ sh script/run-batch-job.sh
 
 Check the updated recommendations:
+
 $ sh script/get_recommendations.sh
 
 Stop docker containers that started from docker-compose script:
+
 $ docker-compose down
 
 # Sources
